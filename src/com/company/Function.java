@@ -1,17 +1,19 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.Stack;
 
 public class Function {
 
-    Stack<String> operator = new Stack<>();
-    LinkedList<String> output = new LinkedList<>();
+    private Stack<String> operator = new Stack<>();
+    private LinkedList<String> output = new LinkedList<>();
     private String equation;
 
     public Function(String equation) {
         this.equation = equation;
+        infixToPostfix();
     }
 
     public static void main(String[] args) {
@@ -33,7 +35,7 @@ public class Function {
 
 //    Check to see if a token is an operand
 
-    public int precedance(String x) {
+    private int precedence(String x) {
         switch (x) {
             case "^":
                 return 3;
@@ -78,7 +80,7 @@ public class Function {
         return false;
     }
 
-    public void infixToPostfix() {
+    private void infixToPostfix() {
 
         for (int i = 0; i < equation.length(); i++) {
 
@@ -112,8 +114,8 @@ public class Function {
             else if (isOperator(element)) { //If element is an operator
                 while (!operator.isEmpty()
                         && (isFunction(operator.peek()) //If the top of operator stack is a function
-                        || (precedance(operator.peek()) > precedance(element)) //or precedence of top operator is more than current
-                        || (precedance(operator.peek()) == precedance(element) && precedance(operator.peek()) != 3)) //Or precedence is equal and not ^
+                        || (precedence(operator.peek()) > precedence(element)) //or precedence of top operator is more than current
+                        || (precedence(operator.peek()) == precedence(element) && precedence(operator.peek()) != 3)) //Or precedence is equal and not ^
                         && !operator.peek().equals("(")) { // And operator is not "("
 
                     output.addLast(operator.pop()); //Add operators to output
@@ -148,5 +150,83 @@ public class Function {
 
     }
 
+//    solves equation for a given x value
 
+    public double evaluate(double value) {
+       Stack<Double> answer = new Stack<>();
+
+        for (int i = 0; i < output.size(); i++) {
+
+            if(isOperator(output.get(i))) {
+                double y = answer.pop();
+                double x = answer.pop();
+                answer.push(Function.calculate(x, y, output.get(i)));
+            }
+
+            if(isFunction(output.get(i))) {
+                double x = answer.pop();
+                answer.push(Function.calculate(x, output.get(i)));
+            }
+
+            else if(isOperand(output.get(i)))
+                if(output.get(i).equals("x")) {
+                    answer.push(value);
+                }
+                else {
+                    answer.push(Double.parseDouble(output.get(i)));
+                }
+        }
+        System.out.println(Arrays.toString(answer.toArray()));
+        return answer.pop();
+    }
+
+    //Used when the token given is an operator
+
+    private static double calculate(Double x, Double y, String token){
+
+        switch (token) {
+            case "+":
+                return x + y;
+
+            case "-":
+                return x - y;
+
+            case "/":
+                return x / y;
+
+            case "*":
+                return x * y;
+
+            case "^":
+                return Math.pow(x, y);
+        }
+
+        return 0;
+    }
+
+//    Used when the token given is a function
+
+    private static double calculate(Double x, String token){
+
+        switch (token) {
+            case "sin":
+                return Math.sin(x);
+
+            case "sec":
+                return 1 / (Math.cos(x));
+
+            case "tan":
+                return Math.tan(x);
+
+            case "cos":
+                return Math.cos(x);
+
+            case "csc":
+                return 1 / (Math.sin(x));
+
+            case "cot":
+                return 1 / (Math.tan(x));
+        }
+        return 0;
+    }
 }
