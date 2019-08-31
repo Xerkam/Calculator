@@ -176,11 +176,10 @@ public class Function {
                     answer.push(Double.parseDouble(output.get(i)));
                 }
         }
-        System.out.println(Arrays.toString(answer.toArray()));
         return answer.pop();
     }
 
-    //Used when the token given is an operator
+//    Used when the token given is an operator
 
     private static double calculate(Double x, Double y, String token){
 
@@ -229,4 +228,25 @@ public class Function {
         }
         return 0;
     }
+
+//    Finds numerical derivative of a function at a point
+
+    public double derivative(double value) {
+        //Using limit definition of a derivative
+        return Math.round((evaluate(value +.00008) - evaluate(value)) / (.00008));
+    }
+
+//    Finds numerical integral within a bounded area.
+
+    public double integral(double boundA, double boundB) {
+        double width = (boundB - boundA) / (200 * (int)((boundB-boundA)/2)); //Find width of each rectangle in sum
+        double sum = 0;
+
+        for (int i = 0; i < 200 * (int)((boundB-boundA)/2); i++) {
+            sum += width * evaluate((width*i + width/2));
+        }
+
+        return sum;
+    }
 }
+
