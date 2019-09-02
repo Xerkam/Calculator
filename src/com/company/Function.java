@@ -53,7 +53,7 @@ public class Function {
 
 //    Check to see if a token is an operator
 
-    private boolean isOperator(String token) {
+    private static boolean isOperator(String token) {
         switch (token) {
             case "^":
             case "*":
@@ -67,7 +67,7 @@ public class Function {
 
 //    Check to see if a token is a function
 
-    private boolean isFunction(String token) {
+    private static boolean isFunction(String token) {
         switch (token) {
             case "sin":
             case "sec":
@@ -154,6 +154,7 @@ public class Function {
 
     public double evaluate(double value) {
        Stack<Double> answer = new Stack<>();
+        System.out.println(Arrays.toString(output.toArray()));
 
         for (int i = 0; i < output.size(); i++) {
 
@@ -175,6 +176,7 @@ public class Function {
                 else {
                     answer.push(Double.parseDouble(output.get(i)));
                 }
+            System.out.println(Arrays.toString(answer.toArray()));
         }
         return answer.pop();
     }
@@ -247,6 +249,10 @@ public class Function {
         }
 
         return sum;
+    }
+
+    public boolean isRemovableDiscontinuity(double value) {
+        return Double.isNaN(evaluate(value));
     }
 }
 
