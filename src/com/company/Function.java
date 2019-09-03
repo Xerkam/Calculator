@@ -154,7 +154,6 @@ public class Function {
 
     public double evaluate(double value) {
        Stack<Double> answer = new Stack<>();
-        System.out.println(Arrays.toString(output.toArray()));
 
         for (int i = 0; i < output.size(); i++) {
 
@@ -176,7 +175,6 @@ public class Function {
                 else {
                     answer.push(Double.parseDouble(output.get(i)));
                 }
-            System.out.println(Arrays.toString(answer.toArray()));
         }
         return answer.pop();
     }
@@ -235,7 +233,11 @@ public class Function {
 
     public double derivative(double value) {
         //Using limit definition of a derivative
-        return Math.round((evaluate(value +.00008) - evaluate(value)) / (.00008));
+        return (evaluate(value +.00008) - evaluate(value)) / (.00008);
+    }
+
+    public double secondDerivative(double value) {
+        return (derivative(value +.00008) - derivative(value)) / (.00008);
     }
 
 //    Finds numerical integral within a bounded area.
@@ -253,6 +255,10 @@ public class Function {
 
     public boolean isRemovableDiscontinuity(double value) {
         return Double.isNaN(evaluate(value));
+    }
+
+    public String toString(){
+        return equation;
     }
 }
 
