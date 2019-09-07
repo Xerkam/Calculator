@@ -1,5 +1,6 @@
 
-.default-color1.chart-series-line {
+.default-color1.chart-series-line,
+.default-color2.chart-series-line {
     -fx-stroke: transparent;
 }
 
@@ -11,12 +12,12 @@
     -fx-background-color: green, green;
 }
 
-.default-color0.chart-line-symbol {
-    -fx-background-color: transparent, transparent;
+.default-color2.chart-line-symbol {
+    -fx-background-color: #257780, #257780;
 }
 
-.default-color1.chart-legend-item-symbol{
-    -fx-background-color: green;
+.default-color0.chart-line-symbol {
+    -fx-background-color: transparent, transparent;
 }
 
 .default-color0.chart-legend-item-symbol{

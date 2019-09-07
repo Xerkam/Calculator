@@ -252,7 +252,7 @@ public class Function {
         return 0;
     }
 
-//    Finds numerical derivative of a function at a point
+//    Finds numerical derivative of a function at a point (rounded to 7 decimal places)
 
     public double derivative(double value) {
         double h = .001;
@@ -273,6 +273,18 @@ public class Function {
         return Math.round(val*100000000d) / 100000000d;
     }
 
+    private double unRoundedSecondDerivative(double value) {
+        double h = .001;
+        return (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2*h);
+    }
+
+    public double thirdDerivative(double value) {
+        double h = .001;
+
+        double val = (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2*h);
+        return Math.round(val*100000000d) / 100000000d;
+    }
+
 //    Finds numerical integral within a bounded area.
 
     public double integral(double boundA, double boundB) {
@@ -290,100 +302,34 @@ public class Function {
         return Double.isNaN(evaluate(value));
     }
 
-//    identifies x value of root within given bounds if it exists
+//    Identifies x value of root for function
 
-//    public Double newtonsMethod(double xZero) {
-//        int maxIterations = 20;
-//        double tolerance = 0;
-//        double xOne = 0;
-//        boolean foundSolution = false;
-//        double y;
-//        double yPrime;
-//
-//        for (int i = 0; i < maxIterations; i++) {
-//            y = evaluate(xZero);
-//            yPrime = derivative(xZero);
-//            if(Math.abs(yPrime) < Math.pow(10,-14))
-//                break;
-//
-//            xOne = xZero - y/yPrime;
-//
-//            if(Math.abs(xOne - xZero) == 0)
-//                foundSolution = true;
-//
-//            xZero = xOne;
-//        }
-//
-//        if(foundSolution)
-//            return xOne;
-//
-//        return null;
-//    }
-
-    public Double bisectionMethod(double a, double b) {
+    public Double newtonsMethod(double xZero) {
+        int maxIterations = 5;
         double tolerance = 0.01;
-        if (evaluate(a) * evaluate(b) >= 0) {
-            return null;
-        }
+        double xOne = 0;
+        boolean foundSolution = false;
+        double y;
+        double yPrime;
 
-        double c = a;
-        while((b - a) >= tolerance) {
-            c = (a + b) / 2;
-
-            if(evaluate(c) == 0.0)
+        for (int i = 0; i < maxIterations; i++) {
+            y = evaluate(xZero);
+            yPrime = derivative(xZero);
+            if(Math.abs(yPrime) < tolerance)
                 break;
 
-            else if (evaluate(c) * evaluate(a) < 0) {
-                b = c;
-            }
-            else
-                a = c;
-        }
-        return c;
-    }
+            xOne = xZero - y/yPrime;
 
-    public Double bisectionMethodDerivative(double a, double b) {
-        double tolerance = 0.01;
-        if (derivative(a) * derivative(b) >= 0) {
-            return null;
+            if(Math.abs(xOne - xZero) <= Math.pow(10,-2))
+                foundSolution = true;
+
+            xZero = xOne;
         }
 
-        double c = a;
-        while((b - a) >= tolerance) {
-            c = (a + b) / 2;
+        if(foundSolution)
+            return xOne;
 
-            if(derivative(c) == 0.0)
-                break;
-
-            else if (derivative(c) * derivative(a) < 0) {
-                b = c;
-            }
-            else
-                a = c;
-        }
-        return c;
-    }
-
-    public Double bisectionMethodSecondDerivative(double a, double b) {
-        double tolerance = 0.01;
-        if (secondDerivative(a) * secondDerivative(b) >= 0) {
-            return null;
-        }
-
-        double c = a;
-        while((b - a) >= tolerance) {
-            c = (a + b) / 2;
-
-            if(secondDerivative(c) == 0.0)
-                break;
-
-            else if (secondDerivative(c) * secondDerivative(a) < 0) {
-                b = c;
-            }
-            else
-                a = c;
-        }
-        return c;
+        return null;
     }
 
     public String toString(){

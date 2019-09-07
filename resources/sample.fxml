@@ -102,7 +102,7 @@
                         <RowConstraints percentHeight="100.0" />
                      </rowConstraints>
                      <children>
-                        <Button styleClass="button" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative1ButtonAction" prefHeight="30.0" text="F'(x)">
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative1ButtonAction" prefHeight="30.0" styleClass="button" text="F'(x)">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>
@@ -110,7 +110,7 @@
                               <Insets left="15.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button styleClass="button" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative2ButtonAction" prefHeight="30.0" text="F''(x)" GridPane.columnIndex="1">
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative2ButtonAction" prefHeight="30.0" styleClass="button" text="F''(x)" GridPane.columnIndex="1">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>
