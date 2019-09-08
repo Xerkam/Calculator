@@ -1,6 +1,7 @@
 
 .default-color1.chart-series-line,
-.default-color2.chart-series-line {
+.default-color2.chart-series-line,
+.default-color3.chart-series-line{
     -fx-stroke: transparent;
 }
 
@@ -14,6 +15,10 @@
 
 .default-color2.chart-line-symbol {
     -fx-background-color: #257780, #257780;
+}
+
+.default-color3.chart-line-symbol {
+    -fx-background-color: #806921, white;
 }
 
 .default-color0.chart-line-symbol {

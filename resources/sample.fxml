@@ -61,8 +61,46 @@
                      <rowConstraints>
                         <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
                      </rowConstraints>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
                      <children>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleGraphButtonAction" prefHeight="30.0" text="Graph" GridPane.halignment="RIGHT">
+                        <TextField id="inputField" fx:id="lowerBoundField" focusTraversable="false" maxWidth="1.7976931348623157E308" promptText="Lower Bound">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="Lato Light" size="14.0" />
+                           </font>
+                        </TextField>
+                        <TextField id="inputField" fx:id="upperBoundField" focusTraversable="false" maxWidth="1.7976931348623157E308" promptText="Upper Bound" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="Lato Light" size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </GridPane>
+                  <TextField id="inputField" fx:id="functionField" maxWidth="1.7976931348623157E308" minWidth="-Infinity" onAction="#handleGraphButtonAction" prefWidth="140.0" promptText="Input Function">
+                     <GridPane.margin>
+                        <Insets left="15.0" right="15.0" top="20.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="Lato Light" size="14.0" />
+                     </font>
+                  </TextField>
+                  <GridPane hgap="20.0" prefHeight="40.0" prefWidth="139.0" GridPane.rowIndex="2">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGraphButtonAction" prefHeight="30.0" prefWidth="125.0" text="Graph" GridPane.halignment="RIGHT">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>
@@ -70,7 +108,7 @@
                               <Insets left="15.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClearButtonAction" prefHeight="30.0" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefHeight="30.0" prefWidth="125.0" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>
@@ -79,30 +117,17 @@
                            </GridPane.margin>
                         </Button>
                      </children>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
                   </GridPane>
-                  <TextField id="inputField" fx:id="inputTextField" maxWidth="1.7976931348623157E308" minWidth="-Infinity" onAction="#handleGraphButtonAction" prefWidth="140.0">
-                     <GridPane.margin>
-                        <Insets left="15.0" right="15.0" top="20.0" />
-                     </GridPane.margin>
-                  </TextField>
-<!--                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="140.0" text="Zoom In" GridPane.rowIndex="3">-->
-<!--                     <font>-->
-<!--                        <Font name="Lato Light" size="14.0" />-->
-<!--                     </font>-->
-<!--                  </Button>-->
-                  <GridPane hgap="20.0" prefHeight="40.0" prefWidth="139.0" GridPane.rowIndex="2">
+                  <GridPane hgap="20.0" prefHeight="40.0" prefWidth="139.0" GridPane.rowIndex="3">
                      <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="158.5" minWidth="15.5" prefWidth="142.5" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="264.5" minWidth="121.5" prefWidth="137.5" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints percentHeight="100.0" />
+                        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative1ButtonAction" prefHeight="30.0" styleClass="button" text="F'(x)">
+                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDerivative1ButtonAction" prefHeight="30.0" prefWidth="125.0" text="F'(x)" GridPane.halignment="RIGHT">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>
@@ -110,7 +135,7 @@
                               <Insets left="15.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDerivative2ButtonAction" prefHeight="30.0" styleClass="button" text="F''(x)" GridPane.columnIndex="1">
+                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDerivative2ButtonAction" prefHeight="30.0" prefWidth="125.0" text="F''(x)" GridPane.columnIndex="1" GridPane.halignment="LEFT">
                            <font>
                               <Font name="Lato Light" size="14.0" />
                            </font>

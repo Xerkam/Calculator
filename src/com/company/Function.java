@@ -116,12 +116,10 @@ public class Function {
 
             //Seperate case for ln as it is a two digit function
 
-            else if(i < equation.length() - 4 && isFunction(equation.substring(i, i + 2))){
+            else if (i < equation.length() - 4 && isFunction(equation.substring(i, i + 2))) {
                 operator.push(equation.substring(i, i + 2));
                 i += 1;
-            }
-
-            else if (isOperator(element)) { //If element is an operator
+            } else if (isOperator(element)) { //If element is an operator
                 while (!operator.isEmpty()
                         && (isFunction(operator.peek()) //If the top of operator stack is a function
                         || (precedence(operator.peek()) > precedence(element)) //or precedence of top operator is more than current
@@ -134,13 +132,9 @@ public class Function {
 
                 operator.push(element);
 
-            }
-
-            else if (element.equals("(")) {
+            } else if (element.equals("(")) {
                 operator.push(element);
-            }
-
-            else if (element.equals(")")) {
+            } else if (element.equals(")")) {
                 try {
 
                     while (!operator.peek().equals("("))
@@ -163,33 +157,29 @@ public class Function {
 //    solves equation for a given x value
 
     public double evaluate(double value) {
-       Stack<Double> answer = new Stack<>();
+        Stack<Double> answer = new Stack<>();
 
         for (int i = 0; i < output.size(); i++) {
 
-            if(isOperator(output.get(i))) {
+            if (isOperator(output.get(i))) {
                 double y = answer.pop();
                 double x = answer.pop();
                 answer.push(Function.calculate(x, y, output.get(i)));
             }
 
-            if(isFunction(output.get(i))) {
-                if(output.get(i).equals("log")) {//Log has two arguments unlike other functions, so requires diff calculate()
+            if (isFunction(output.get(i))) {
+                if (output.get(i).equals("log")) {//Log has two arguments unlike other functions, so requires diff calculate()
                     double y = answer.pop();
                     double x = answer.pop();
                     answer.push(Function.calculate(x, y, output.get(i)));
-                }
-                else {
+                } else {
                     double x = answer.pop();
                     answer.push(Function.calculate(x, output.get(i)));
                 }
-            }
-
-            else if(isOperand(output.get(i)))
-                if(output.get(i).equals("x")) {
+            } else if (isOperand(output.get(i)))
+                if (output.get(i).equals("x")) {
                     answer.push(value);
-                }
-                else {
+                } else {
                     answer.push(Double.parseDouble(output.get(i)));
                 }
         }
@@ -198,7 +188,7 @@ public class Function {
 
 //    Used when the token given is an operator
 
-    private static double calculate(Double x, Double y, String token){
+    private static double calculate(Double x, Double y, String token) {
 
         switch (token) {
             case "+":
@@ -225,7 +215,7 @@ public class Function {
 
 //    Used when the token given is a function
 
-    private static double calculate(Double x, String token){
+    private static double calculate(Double x, String token) {
 
         switch (token) {
             case "sin":
@@ -256,46 +246,62 @@ public class Function {
 
     public double derivative(double value) {
         double h = .001;
-        double val = (evaluate(value + h) - evaluate(value - h)) / (2*h);
+        double val = (evaluate(value + h) - evaluate(value - h)) / (2 * h);
 
-        return Math.round(val*100000000d) / 100000000d; //rounds to seven decimal places
+        if (Double.isNaN(val))
+            return val;
+
+        return Math.round(val * 100000000d) / 100000000d; //rounds to seven decimal places
     }
 
     private double unRoundedDerivative(double value) {
         double h = .001;
-        return (evaluate(value + h) - evaluate(value - h)) / (2*h);
+        return (evaluate(value + h) - evaluate(value - h)) / (2 * h);
     }
 
     public double secondDerivative(double value) {
         double h = .001;
+        double val = (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2 * h);
 
-        double val = (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2*h);
-        return Math.round(val*100000000d) / 100000000d;
+        if (Double.isNaN(val))
+            return val;
+
+        return Math.round(val * 100000000d) / 100000000d;
     }
 
-    private double unRoundedSecondDerivative(double value) {
+    public double unRoundedSecondDerivative(double value) {
         double h = .001;
-        return (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2*h);
+        return (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2 * h);
     }
 
     public double thirdDerivative(double value) {
         double h = .001;
+        double val = (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2 * h);
 
-        double val = (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2*h);
-        return Math.round(val*100000000d) / 100000000d;
+        if(Double.isNaN(val))
+            return val;
+
+        return Math.round(val * 100000000d) / 100000000d;
     }
 
 //    Finds numerical integral within a bounded area.
 
     public double integral(double boundA, double boundB) {
-        double width = (boundB - boundA) / (200 * (int)((boundB-boundA)/2)); //Find width of each rectangle in sum
+        double width = (boundB - boundA) / (1000 * (int) ((boundB - boundA) / 2)); //Find width of each rectangle in sum
         double sum = 0;
 
-        for (int i = 0; i < 200 * (int)((boundB-boundA)/2); i++) {
-            sum += width * evaluate((width*i + width/2));
+        for (int i = 0; i < 1000 * (int) ((boundB - boundA) / 2); i++) {
+            sum += width * evaluate((width * i + width / 2));
         }
 
         return sum;
+    }
+
+    public double thereomOfCalc(double boundA, double boundB) {
+        //As F(x) = integral(a, b, f'(x)) and f'(x) = lim h -> 0 (F(x + h) - F(x))/h
+        double h = .001;
+
+        return (integral(boundB, boundB + h))/h;
     }
 
     public boolean isRemovableDiscontinuity(double value) {
@@ -305,7 +311,7 @@ public class Function {
 //    Identifies x value of root for function
 
     public Double newtonsMethod(double xZero) {
-        int maxIterations = 5;
+        int maxIterations = 10;
         double tolerance = 0.01;
         double xOne = 0;
         boolean foundSolution = false;
@@ -315,24 +321,24 @@ public class Function {
         for (int i = 0; i < maxIterations; i++) {
             y = evaluate(xZero);
             yPrime = derivative(xZero);
-            if(Math.abs(yPrime) < tolerance)
+            if (Math.abs(yPrime) < tolerance)
                 break;
 
-            xOne = xZero - y/yPrime;
+            xOne = xZero - y / yPrime;
 
-            if(Math.abs(xOne - xZero) <= Math.pow(10,-2))
+            if (Math.abs(xOne - xZero) < Math.pow(10, -7))
                 foundSolution = true;
 
             xZero = xOne;
         }
 
-        if(foundSolution)
+        if (foundSolution)
             return xOne;
 
         return null;
     }
 
-    public String toString(){
+    public String toString() {
         return equation;
     }
 }

@@ -33,7 +33,9 @@ public class Main extends Application {
         primaryStage.setX(666);
         primaryStage.setY(550);
 
-        System.out.println(new Function("ln(x)").evaluate(-.01) + 1);
+        System.out.println(new Function("x^2").thirdDerivative(2));
+        System.out.println(new Function("x^2").thirdDerivative(2.01));
+        System.out.println(new Function("x^2").thereomOfCalc(0,10));
 
         primaryStage.show();
 
