@@ -1,24 +1,4 @@
 
-.idea/workspace.xml
-.DS_Store
-.idea/description.html
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/project-template.xml
-.idea/vcs.xml
-out/production/Calculator/com/company/Function.class
-out/production/Calculator/com/company/Main.class
-Calculator.iml
-out/production/Calculator/com/company/style.css
-out/production/Calculator/com/company/Controller.class
-out/production/Calculator/com/company/sample.fxml
-.idea/libraries/lib.xml
-out/production/Calculator/META-INF/Calculator.kotlin_module
-.idea/libraries/lib.xml
-.idea/uiDesigner.xml
-out/production/Calculator/com/company/ArrayTraverse.class
-out/production/Calculator/com/company/chart.css
-out/production/Calculator/sample.fxml
-out/production/Calculator/icon.png
-.idea/codeStyles/codeStyleConfig.xml
+out
+resources
+.idea
