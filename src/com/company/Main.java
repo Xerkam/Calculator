@@ -7,11 +7,9 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.File;
-import java.math.BigDecimal;
 
 
 //*******************To Do*******************
-//Implement bounds (ln(x) and log10(x) show up as having POI at end point due to improperly set bounds
 //Fundemental Theorem of Calc
 
 
@@ -31,11 +29,12 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         primaryStage.setX(666);
-        primaryStage.setY(550);
 
-        System.out.println(new Function("x^2").thirdDerivative(2));
-        System.out.println(new Function("x^2").thirdDerivative(2.01));
-        System.out.println(new Function("x^2").thereomOfCalc(0,10));
+        System.out.println(new Function("x^6").derivative(.01));
+        System.out.println(new Function("x^6").derivative(0));
+
+
+
 
         primaryStage.show();
 
