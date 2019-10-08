@@ -251,8 +251,7 @@ public class Function {
         if (Double.isNaN(val))
             return val;
 //        Rounding to the 7th decimal place seems to be interfering with very discrete extremas/POI such as x^10 or x^11
-//        return Math.round(val * 100000000d) / 100000000d; //rounds to seven decimal places
-        return val;
+        return Math.round(val * 100000000d) / 100000000d; //rounds to seven decimal places
     }
 
     private double unRoundedDerivative(double value) {
@@ -267,8 +266,8 @@ public class Function {
         if (Double.isNaN(val))
             return val;
 //        Rounding to the 7th decimal place seems to be interfering with very discrete extremas/POI such as x^10 or x^11
-//        return Math.round(val * 100000000d) / 100000000d;
-        return val;
+        return Math.round(val * 1000000d) / 1000000d;
+//        return val;
     }
 
     private double unRoundedSecondDerivative(double value) {
@@ -283,18 +282,39 @@ public class Function {
         if (Double.isNaN(val))
             return val;
 
+        return Math.round(val * 1000000d) / 1000000d;
+    }
+
+    private double unRoundedThirdDerivative(double value) {
+        double h = .001;
+        return (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2 * h);
+    }
+    
+    public double fourthDerivative(double value){
+        double h = .001;
+        double val = (unRoundedThirdDerivative(value + h) - unRoundedThirdDerivative(value - h)) / (2 * h);
+
+        if (Double.isNaN(val))
+            return val;
+
         return Math.round(val * 100000000d) / 100000000d;
+    }
+    
+    private double unRoundedFourthDerivative(double value) {
+        double h = .001;
+        return (unRoundedThirdDerivative(value + h) - unRoundedThirdDerivative(value - h)) / (2 * h);
     }
 
 
 //    Finds numerical integral within a bounded area.
 
     public double integral(double boundA, double boundB) {
-        double width = (boundB - boundA) / (1000 * (int) ((boundB - boundA) / 2)); //Find width of each rectangle in sum
+        double width = (boundB - boundA) / (1000); //Find width of each rectangle in sum
         double sum = 0;
 
-        for (int i = 0; i < 1000 * (int) ((boundB - boundA) / 2); i++) {
-            sum += width * evaluate((width * i + width / 2));
+
+        for (double i = boundA; i < boundB; i+= width) {
+            sum += width * evaluate((i + width / 2));
         }
 
         return sum;
@@ -364,7 +384,7 @@ public class Function {
 
     public Double bisectionMethodDerivative(double a, double b) {
         double tolerance = Math.pow(10, -7);
-        if (derivative(a) * derivative(b) >= 0) {
+        if (unRoundedDerivative(a) * unRoundedDerivative(b) >= 0) {
             return null;
         }
 
@@ -372,10 +392,10 @@ public class Function {
         while ((b - a) >= tolerance) {
             c = (a + b) / 2;
 
-            if (derivative(c) == 0.0)
+            if (unRoundedDerivative(c) == 0.0)
                 break;
 
-            else if (derivative(c) * derivative(a) < 0) {
+            else if (unRoundedDerivative(c) * unRoundedDerivative(a) < 0) {
                 b = c;
             } else
                 a = c;
@@ -385,7 +405,7 @@ public class Function {
 
     public Double bisectionMethodSecondDerivative(double a, double b) {
         double tolerance = Math.pow(10, -7);
-        if (secondDerivative(a) * secondDerivative(b) >= 0) {
+        if (unRoundedSecondDerivative(a) * unRoundedSecondDerivative(b) >= 0) {
             return null;
         }
 
@@ -393,10 +413,52 @@ public class Function {
         while ((b - a) >= tolerance) {
             c = (a + b) / 2;
 
-            if (secondDerivative(c) == 0.0)
+            if (unRoundedSecondDerivative(c) == 0.0)
                 break;
 
-            else if (secondDerivative(c) * secondDerivative(a) < 0) {
+            else if (unRoundedSecondDerivative(c) * unRoundedSecondDerivative(a) < 0) {
+                b = c;
+            } else
+                a = c;
+        }
+        return c;
+    }
+
+    public Double bisectionMethodThirdDerivative(double a, double b) {
+        double tolerance = Math.pow(10, -7);
+        if (unRoundedThirdDerivative(a) * unRoundedThirdDerivative(b) >= 0) {
+            return null;
+        }
+
+        double c = a;
+        while ((b - a) >= tolerance) {
+            c = (a + b) / 2;
+
+            if (unRoundedThirdDerivative(c) == 0.0)
+                break;
+
+            else if (unRoundedThirdDerivative(c) * unRoundedThirdDerivative(a) < 0) {
+                b = c;
+            } else
+                a = c;
+        }
+        return c;
+    }
+
+    public Double bisectionMethodFourthDerivative(double a, double b) {
+        double tolerance = Math.pow(10, -7);
+        if (unRoundedFourthDerivative(a) * unRoundedFourthDerivative(b) >= 0) {
+            return null;
+        }
+
+        double c = a;
+        while ((b - a) >= tolerance) {
+            c = (a + b) / 2;
+
+            if (unRoundedFourthDerivative(c) == 0.0)
+                break;
+
+            else if (unRoundedFourthDerivative(c) * unRoundedFourthDerivative(a) < 0) {
                 b = c;
             } else
                 a = c;

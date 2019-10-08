@@ -29,6 +29,9 @@ public class Controller implements Initializable {
     @FXML
     private TextField upperBoundField;
 
+    @FXML
+    private TextField incrementField;
+
     private double boundA, boundB;
 
     private double previousX, currentX, nextX;
@@ -109,6 +112,13 @@ public class Controller implements Initializable {
         String funcField = functionField.getText();
         String boundAField = lowerBoundField.getText();
         String boundBField = upperBoundField.getText();
+        String incrementNum = incrementField.getText();
+        double increment;
+
+        if (!incrementNum.isBlank())
+            increment = Double.parseDouble(incrementNum);
+        else
+            increment = .01;
 
         if (!boundAField.isBlank())
             boundA = Double.parseDouble(boundAField);
@@ -128,14 +138,14 @@ public class Controller implements Initializable {
             func = new Function(funcField);
 
             //Adds points on graph
-            for (double i = boundA + .01; i < boundB; i += .01) {
+            for (double i = boundA + increment; i < boundB; i += increment) {
 
-                previousX = i - .01;
+                previousX = i - increment;
                 currentX = i;
-                nextX = i + .01;
+                nextX = i + increment;
 
 //                checks to see if each plotted point is an extrema.
-//
+
                 if (func.evaluate(currentX) > func.evaluate(previousX) && func.evaluate(currentX) > func.evaluate(nextX)
                         || func.evaluate(currentX) < func.evaluate(previousX) && func.evaluate(currentX) < func.evaluate(nextX)) {
                     Double bisectionZero = func.bisectionMethodDerivative(previousX, nextX);
@@ -143,13 +153,6 @@ public class Controller implements Initializable {
                         extrema.getData().add(new XYChart.Data<>(i, func.evaluate(i)));
                     }
                 }
-//                Alternate implementation below.
-
-//                if ((func.evaluate(currentX) - func.evaluate(previousX) > tolerance
-//                        && func.evaluate(currentX) - func.evaluate(nextX) > tolerance)
-//                        || (func.evaluate(currentX) - func.evaluate(previousX) < -tolerance
-//                        && func.evaluate(currentX) - func.evaluate(nextX) < -tolerance))
-//                    extrema.getData().add(new XYChart.Data<>(i, func.evaluate(i)));
 
 //                checks to see if each plotted point is a POI via first derivative extrema; identifies if currentX is either
 //                greater than prev/nextX or less than prev/nextX. Then uses the bisection method from prevX to nextX to
@@ -194,10 +197,10 @@ public class Controller implements Initializable {
 
                 Function temp = new Function(denominator);
 
-                for (double i = boundA + .01; i < boundB; i += .01) {
-                    previousX = i - .01;
+                for (double i = boundA + increment; i < boundB; i += increment) {
+                    previousX = i - increment;
                     currentX = i;
-                    nextX = i + .01;
+                    nextX = i + increment;
 
                     if ((temp.evaluate(previousX) > 0 && temp.evaluate(nextX) < 0)
                             || (temp.evaluate(previousX) < 0 && temp.evaluate(nextX) > 0)) {
@@ -224,6 +227,13 @@ public class Controller implements Initializable {
         String funcField = functionField.getText();
         String boundAField = lowerBoundField.getText();
         String boundBField = upperBoundField.getText();
+        String incrementNum = incrementField.getText();
+        double increment;
+
+        if (!incrementNum.isBlank())
+            increment = Double.parseDouble(incrementNum);
+        else
+            increment = .01;
 
         if (!boundAField.isBlank())
             boundA = Double.parseDouble(boundAField);
@@ -243,33 +253,32 @@ public class Controller implements Initializable {
             func = new Function(funcField);
 
             //Adds points on graph
-            for (double i = boundA + .01; i < boundB; i += .01) {
+            for (double i = boundA + increment; i < boundB; i += increment) {
 
-                previousX = i - .01;
+                previousX = i - increment;
                 currentX = i;
-                nextX = i + .01;
+                nextX = i + increment;
 
-//                Computes extrema/POI of first derivative, too much floating point inaccuracy to function across all
-//                equations.
+//                checks to see if each plotted point is an extrema.
 
-////                checks to see if each plotted point is an extrema.
-////
-//                if ((func.derivative(currentX) - func.derivative(previousX) > tolerance
-//                        && func.derivative(currentX) - func.derivative(nextX) > tolerance)
-//                        || (func.derivative(currentX) - func.derivative(previousX) < -tolerance
-//                        && func.derivative(currentX) - func.derivative(nextX) < -tolerance))
-//                    extrema.getData().add(new XYChart.Data<>(i, func.derivative(i)));
-//
-//
-////                checks to see if each plotted point is a POI via following derivative extrema
-//
-//                if ((func.secondDerivative(currentX) - func.secondDerivative(previousX) > tolerance
-//                        && func.secondDerivative(currentX) - func.secondDerivative(nextX) > tolerance)
-//                        || (func.secondDerivative(currentX) - func.secondDerivative(previousX) < -tolerance
-//                        && func.secondDerivative(currentX) - func.secondDerivative(nextX) < -tolerance))
-//                    inflection.getData().add(new XYChart.Data<>(i, func.derivative(i)));
-//
-////                charts points of graph (NaN required to graph functions with naturally bounded areas ex: log10x, ln(x)
+                if (func.derivative(currentX) > func.derivative(previousX) && func.derivative(currentX) > func.derivative(nextX)
+                        || func.derivative(currentX) < func.derivative(previousX) && func.derivative(currentX) < func.derivative(nextX)) {
+                    Double bisectionZero = func.bisectionMethodSecondDerivative(previousX, nextX);
+                    if (bisectionZero != null) {
+                        extrema.getData().add(new XYChart.Data<>(i, func.derivative(i)));
+                    }
+                }
+
+//                checks to see if each plotted point is a POI via first derivative extrema; identifies if currentX is either
+//                greater than prev/nextX or less than prev/nextX. Then uses the bisection method from prevX to nextX to
+//                more accurately identify where a POI could occur.
+
+                if (func.secondDerivative(currentX) > func.secondDerivative(previousX) && func.secondDerivative(currentX) > func.secondDerivative(nextX)
+                        || func.secondDerivative(currentX) < func.secondDerivative(previousX) && func.secondDerivative(currentX) < func.secondDerivative(nextX)) {
+                    Double bisectionZero = func.bisectionMethodThirdDerivative(previousX, nextX);
+                    if(bisectionZero != null)
+                        inflection.getData().add(new XYChart.Data<>(i, func.derivative(i)));
+                }
 //
                 if (!Double.isNaN(func.evaluate(i)))
                     series.getData().add(new XYChart.Data<>(i, func.derivative(i)));
@@ -291,10 +300,10 @@ public class Controller implements Initializable {
 
                 Function temp = new Function(denominator);
 
-                for (double i = boundA + .01; i < boundB; i += .01) {
-                    previousX = i - .01;
+                for (double i = boundA + increment; i < boundB; i += increment) {
+                    previousX = i - increment;
                     currentX = i;
-                    nextX = i + .01;
+                    nextX = i + increment;
 
                     if ((temp.evaluate(previousX) > 0 && temp.evaluate(nextX) < 0)
                             || (temp.evaluate(previousX) < 0 && temp.evaluate(nextX) > 0)) {
@@ -321,6 +330,13 @@ public class Controller implements Initializable {
         String funcField = functionField.getText();
         String boundAField = lowerBoundField.getText();
         String boundBField = upperBoundField.getText();
+        String incrementNum = incrementField.getText();
+        double increment;
+
+        if (!incrementNum.isBlank())
+            increment = Double.parseDouble(incrementNum);
+        else
+            increment = .01;
 
         if (!boundAField.isBlank())
             boundA = Double.parseDouble(boundAField);
@@ -340,22 +356,25 @@ public class Controller implements Initializable {
             func = new Function(funcField);
 
             //Adds points on graph
-            for (double i = boundA + .01; i < boundB; i += .01) {
+            for (double i = boundA + increment; i < boundB; i += increment) {
 
-                previousX = i - .01;
+                previousX = i - increment;
                 currentX = i;
-                nextX = i + .01;
+                nextX = i + increment;
+                
+                
 
 //                Computes extrema/POI of second derivative, too much floating point inaccuracy to function across all
 //                equations.
 
 ////                checks to see if each plotted point is an extrema.
 //
-//                if (((func.secondDerivative(currentX) - func.secondDerivative(previousX)) > tolerance
-//                        && (func.secondDerivative(currentX) - func.secondDerivative(nextX)) > tolerance)
-//                        || ((func.secondDerivative(currentX) - func.secondDerivative(previousX)) < -tolerance
-//                        && (func.secondDerivative(currentX) - func.secondDerivative(nextX)) < -tolerance))
-//                    extrema.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
+                if (func.secondDerivative(currentX) > func.secondDerivative(previousX) && func.secondDerivative(currentX) > func.secondDerivative(nextX)
+                        || func.secondDerivative(currentX) < func.secondDerivative(previousX) && func.secondDerivative(currentX) < func.secondDerivative(nextX)) {
+                    Double bisectionZero = func.bisectionMethodThirdDerivative(previousX, nextX);
+                    if(bisectionZero != null)
+                        extrema.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
+                }
 //
 ////                checks to see if each plotted point is a POI via following derivative extrema
 //
@@ -364,9 +383,12 @@ public class Controller implements Initializable {
 //                        || (func.thirdDerivative(currentX) - func.thirdDerivative(previousX) < -tolerance
 //                        && func.thirdDerivative(currentX) - func.thirdDerivative(nextX) < -tolerance))
 
-//                if (func.thirdDerivativeGraph(currentX) > func.thirdDerivativeGraph(previousX) && func.thirdDerivativeGraph(currentX) > func.thirdDerivativeGraph(nextX)
-//                        || func.thirdDerivativeGraph(currentX) < func.thirdDerivativeGraph(previousX) && func.thirdDerivativeGraph(currentX) < func.thirdDerivativeGraph(nextX))
-//                    inflection.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
+                if (func.thirdDerivative(currentX) > func.thirdDerivative(previousX) && func.thirdDerivative(currentX) > func.thirdDerivative(nextX)
+                        || func.thirdDerivative(currentX) < func.thirdDerivative(previousX) && func.thirdDerivative(currentX) < func.thirdDerivative(nextX)) {
+                    Double bisectionZero = func.bisectionMethodFourthDerivative(previousX, nextX);
+                    if(bisectionZero != null)
+                        inflection.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
+                }
 
 ////                charts points of graph (NaN required to graph functions with naturally bounded areas ex: log10x, ln(x)
 

@@ -30,9 +30,6 @@ public class Main extends Application {
 
         primaryStage.setX(666);
 
-        System.out.println(new Function("x^6").derivative(.01));
-        System.out.println(new Function("x^6").derivative(0));
-
 
 
 
