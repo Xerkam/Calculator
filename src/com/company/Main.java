@@ -13,43 +13,44 @@ import java.io.File;
 //Fundemental Theorem of Calc
 
 
-public class Main extends Application {
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        FXMLLoader loader = new FXMLLoader(new File("/Users/danielpeshev/Documents/GitHub/Calculator/resources/sample.fxml").toURI().toURL());
-        Parent root = loader.load();
-        Scene scene = new Scene(root, 666, 550);
-        scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
-        primaryStage.setScene(scene);
-
-        primaryStage.setX(666);
-        primaryStage.show();
-        Function f = new Function("sin(x)");
-        System.out.println(f.evaluate(5) - f.evaluate(1));
-        System.out.println(f.FTCintegral(1,5));
-        f.fundamentalTheoremOfCalc(5,1);
-
-
-
-
-
-
-    }
-
-
-}
-
-//public class Main {
+//public class Main extends Application {
+//
 //    public static void main(String[] args) {
-//        Function g = new Function("(x^2)/(3*x+1)");
-//        System.out.println(g.rpn());
+//        launch(args);
+//    }
+//
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+////        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+//        FXMLLoader loader = new FXMLLoader(new File("/Users/danielpeshev/Documents/GitHub/Calculator/resources/sample.fxml").toURI().toURL());
+//        Parent root = loader.load();
+//        Scene scene = new Scene(root, 666, 550);
+//        scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+//        primaryStage.setScene(scene);
+//
+//        primaryStage.setX(666);
+//        primaryStage.show();
+//
+//
+//
+//
 //
 //
 //    }
+//
+//
 //}
+
+public class Main {
+    public static void main(String[] args) {
+        Function f = new Function("sin(x)");
+        DerivationEngine g = new DerivationEngine(f);
+        System.out.println(f.rpnToString());
+        System.out.println(g.toString());
+        for (int i = 0; i < 10; i++){
+            System.out.println("i = " + i + " value = " + g.evaluate(i));
+        }
+
+
+    }
+}
