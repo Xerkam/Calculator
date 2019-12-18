@@ -67,9 +67,9 @@ public class Function {
         return false;
     }
 
-//    Check to see if a token is a function
+//    Check to see if token is a trig function
 
-    public static boolean isFunction(String token) {
+    public static boolean isTrig(String token) {
         switch (token) {
             case "sin":
             case "sec":
@@ -77,11 +77,20 @@ public class Function {
             case "cos":
             case "csc":
             case "cot":
+                return true;
+        }
+        return false;
+    }
+
+//    Check to see if a token is a function
+
+    public static boolean isFunction(String token) {
+        switch (token) {
             case "log":
             case "ln":
                 return true;
         }
-        return false;
+        return isTrig(token);
     }
 
 

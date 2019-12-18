@@ -29,6 +29,8 @@ public class DerivationEngine {
         return true;
     }
 
+
+    @SuppressWarnings("Duplicates")
     private void derive() {
         String value = input.get(upper);
 
@@ -58,8 +60,120 @@ public class DerivationEngine {
 
         }
 
-        else if(value.equals("sin")){
-            
+        else if(Function.isTrig(value)) {
+//          derivative of sin(f(x)) = f'(x) * cos(f(x))
+//          derivative of cos(f(x)) = f'(x) * - sin(f(x)))
+
+//          derivative of tan(f(x)) = f'(x) * sec^2(f(x))
+//          derivative of cot(f(x)) = f'(x) * - csc^2(f(x)))
+
+//          derivative of sec(f(x)) = f'(x) * sec(f(x)) * tan(f(x))
+//          derivative of csc(f(x)) = f'(x) * - csc(f(x))) * cot(f(x))
+
+            switch(value) {
+                case "sin": {
+                    output.add("*");//Multiplying by f'x
+                    output.add("cos");
+                    upper--;//go to fx
+                    int fxLocation = upper;
+                    copy();
+                    upper = fxLocation;
+                    derive();//get f'x
+                }
+
+                case "cos": {
+                    output.add("*");
+                    output.add("-1");//* and -1 make equation negative
+                    output.add("*");//Multiplying by f'x
+                    output.add("sin");
+                    upper--;//go to fx
+                    int fxLocation = upper;
+                    copy();
+                    upper = fxLocation;
+                    derive();//get f'x
+                }
+
+                case "tan": {
+                    output.add("*");//Multiplying by f'x
+                    output.add("^");
+                    output.add("2");//Add ^2 for sec(x)^2
+                    output.add("sec");
+                    upper--;//go to fx
+                    int fxLocation = upper;//saving fx location for derivative;
+                    copy();//add fx
+                    upper = fxLocation;
+                    derive();//add f'x
+                }
+
+                case "cot": {
+                    output.add("*");
+                    output.add("-1");//* and -1 make equation negative
+                    output.add("*");//Multiplying by f'x
+                    output.add("^");
+                    output.add("2");//Add ^2 for sec(x)^2
+                    output.add("csc");
+                    upper--;//go to fx
+                    int fxLocation = upper;//saving fx location for derivative;
+                    copy();//add fx
+                    upper = fxLocation;
+                    derive();//add f'x
+                }
+
+                case "sec": {
+                    output.add("*");//multiplying by f'x
+                    int fxPosition = upper - 1;//store position of fx so you can place it in the tan and derive
+                    copy();//adds copy of whole equation to derivative (aka sec(x))
+                    output.add("*");//multiplying by tan
+                    output.add("tan");
+                    upper = fxPosition;
+                    copy();//add fx for tan
+                    upper = fxPosition;
+                    derive();//add f'x
+
+                }
+
+                case "csc": {
+                    output.add("*");
+                    output.add("-1");////* and -1 make equation negative
+                    output.add("*");//multiplying by f'x
+                    int fxPosition = upper - 1;//store position of fx so you can place it in the cot and derive
+                    copy();//adds copy of whole equation to derivative (aka sec(x))
+                    output.add("*");//multiplying by cot
+                    output.add("cot");
+                    upper = fxPosition;
+                    copy();//add fx for tan
+                    upper = fxPosition;
+                    derive();//add f'x
+
+                }
+            }
+
+        }
+
+        else if(value.equals("ln")) {
+//          derivative of ln(x) = f'x / f(x)
+            output.add("/");//Add division sign
+            upper--;//move to fx
+            int fxPosition = upper;
+            copy();//First add the denominator of the derivative so fx
+            upper = fxPosition;
+            derive();//add the derivative;
+        }
+
+        else if(value.equals("log")) {
+//          derivative of loga(x) = f'x / (f(x) * ln(a))
+            output.add("/");//Add division sign
+            upper--;//move to fx
+            output.add("*");//add multiplication sign for denominator
+            output.add("ln");//add ln of ln(a)
+            int fxPosition = upper;//store fx position
+            upper = upper - fxPosition;//moves to position that a is present within expression as logax is [a, x, log] in RPN
+            copy();//copies A
+            upper = fxPosition;
+            copy();//add denominator of derivative
+            upper = fxPosition;
+            derive();//add the numerator
+
         }
 
         else if(value.equals("*")) {
@@ -93,7 +207,6 @@ public class DerivationEngine {
             int fxPosition = upper;//Saves position of f(x) so we can later use derive(); for f'(x)
             copy();//Adds the f(x) for the base of f(x)^(K - 1)
             upper = fxPosition;
-            System.out.println(fxPosition);
             derive();//Adds the f'(x)
 
         }
@@ -173,11 +286,29 @@ public class DerivationEngine {
 
         }
 
+        else if(value.equals("ln")) {
+            output.add("ln");
+            upper--;
+            copy();
+        }
+
+        else if(value.equals("log")) {
+            output.add("log");
+            upper--;
+            copy();
+            copy();
+        }
+
+        else if(Function.isTrig(value)) {
+            output.add(value);
+            upper--;
+            copy();
+        }
+
         else
             System.out.println("fail");
     }
 
-    @SuppressWarnings("Duplicates")
     public double evaluate(double value) {
         Stack<Double> answer = new Stack<>();
 
@@ -207,8 +338,6 @@ public class DerivationEngine {
         }
         return answer.pop();
     }
-
-
 
     @Override
     public String toString() {
