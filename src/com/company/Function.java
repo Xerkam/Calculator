@@ -11,6 +11,7 @@ public class Function {
     private Stack<String> operator = new Stack<>();
     private LinkedList<String> output = new LinkedList<>();
     private String equation;
+    private LinkedList<String> derivative = new LinkedList<>();
 
     public Function(String equation) {
         this.equation = equation;
@@ -23,7 +24,7 @@ public class Function {
 
 //    Returns the precedence of a certain operation
 
-    private static boolean isOperand(String token) {
+    public static boolean isOperand(String token) {
         if (token.equals("x"))
             return true;
         try {
@@ -54,7 +55,7 @@ public class Function {
 
 //    Check to see if a token is an operator
 
-    private static boolean isOperator(String token) {
+    public static boolean isOperator(String token) {
         switch (token) {
             case "^":
             case "*":
@@ -68,7 +69,7 @@ public class Function {
 
 //    Check to see if a token is a function
 
-    private static boolean isFunction(String token) {
+    public static boolean isFunction(String token) {
         switch (token) {
             case "sin":
             case "sec":
@@ -83,7 +84,42 @@ public class Function {
         return false;
     }
 
-    private void infixToPostfix() {
+
+
+//    Symbolic Diff Section
+
+
+
+    private static boolean isUnaryOperator(String token) {
+        if(token.equals("log"))
+            return false;
+        return isFunction(token);
+
+    }
+
+    private static boolean isBinaryOperator(String token) {
+        if(token.equals("log"))
+            return true;
+        return isOperator(token);
+    }
+
+//    private int leftBoundGrasp(int arity, Integer index) {
+//        do {
+//            index = index - 1;
+//            if (isUnaryOperator(output.get(index)))
+//                leftBoundGrasp(1, index);
+//            else {
+//                if (isBinaryOperator(output.get(index)))
+//                    leftBoundGrasp(2, index);
+//                else
+//                    if ()
+//            }
+//
+//        }
+//    }
+
+
+    private void infixToPostfix()  {
 
         for (int i = 0; i < equation.length(); i++) {
 
@@ -188,7 +224,7 @@ public class Function {
 
 //    Used when the token given is an operator
 
-    private static double calculate(Double x, Double y, String token) {
+    public static double calculate(Double x, Double y, String token) {
 
         switch (token) {
             case "+":
@@ -215,7 +251,7 @@ public class Function {
 
 //    Used when the token given is a function
 
-    private static double calculate(Double x, String token) {
+    public static double calculate(Double x, String token) {
 
         switch (token) {
             case "sin":
@@ -241,6 +277,7 @@ public class Function {
         }
         return 0;
     }
+
 
 //    Finds numerical derivative of a function at a point (rounded to 7 decimal places)
 
@@ -309,7 +346,7 @@ public class Function {
 //    Finds numerical integral within a bounded area.
 
     public double integral(double boundA, double boundB) {
-        double width = (boundB - boundA) / (1000); //Find width of each rectangle in sum
+        double width = (boundB - boundA) / (20000); //Find width of each rectangle in sum
         double sum = 0;
 
 
@@ -318,13 +355,6 @@ public class Function {
         }
 
         return sum;
-    }
-
-    public double thereomOfCalc(double boundA, double boundB) {
-        //As F(x) = integral(a, b, f'(x)) and f'(x) = lim h -> 0 (F(x + h) - F(x))/h
-        double h = .001;
-
-        return (integral(boundB, boundB + h)) / h;
     }
 
     public boolean isRemovableDiscontinuity(double value) {
@@ -466,9 +496,32 @@ public class Function {
         return c;
     }
 
-
     public String toString() {
         return equation;
+    }
+
+    public void fundamentalTheoremOfCalc(double boundA, double boundB) {
+        System.out.println((evaluate(boundB) - evaluate(boundA)) + " approximately equals " + (FTCintegral(boundA, boundB)));
+    }
+
+    public double FTCintegral(double boundA, double boundB) {
+        double width = (boundB - boundA) / (20000); //Find width of each rectangle in sum
+        double sum = 0;
+
+
+        for (double i = boundA; i < boundB; i+= width) {
+            sum += width * derivative((i + width / 2));
+        }
+
+        return sum;
+    }
+
+    public LinkedList<String> rpn() {
+        return output;
+    }
+
+    public String rpnToString() {
+        return Arrays.toString(output.toArray());
     }
 }
 

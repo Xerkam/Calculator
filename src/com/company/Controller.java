@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TextField;
@@ -144,6 +145,17 @@ public class Controller implements Initializable {
                 currentX = i;
                 nextX = i + increment;
 
+//                If graph has asymptotic movement, reset it and have a new section begin
+
+                if(func.evaluate(currentX) > Math.pow(10,2)) {
+
+                    graph.getData().add(series);
+                    series = new XYChart.Series<>();
+
+                    i += increment * 10;
+
+                }
+
 //                checks to see if each plotted point is an extrema.
 
                 if (func.evaluate(currentX) > func.evaluate(previousX) && func.evaluate(currentX) > func.evaluate(nextX)
@@ -184,10 +196,12 @@ public class Controller implements Initializable {
 
             series.setName(func.toString());
             extrema.setName("extrema");
-            inflection.setName("inflection points");
+            inflection.setName("inflectionPoints");
             graph.getData().add(series);
             graph.getData().add(extrema);
             graph.getData().add(inflection);
+
+
 
             //If function has denominator, check to see if removable discontinuities exist.
 

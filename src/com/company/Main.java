@@ -29,13 +29,11 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         primaryStage.setX(666);
-
-
-
-
         primaryStage.show();
-
-
+        Function f = new Function("sin(x)");
+        System.out.println(f.evaluate(5) - f.evaluate(1));
+        System.out.println(f.FTCintegral(1,5));
+        f.fundamentalTheoremOfCalc(5,1);
 
 
 
@@ -46,3 +44,12 @@ public class Main extends Application {
 
 
 }
+
+//public class Main {
+//    public static void main(String[] args) {
+//        Function g = new Function("(x^2)/(3*x+1)");
+//        System.out.println(g.rpn());
+//
+//
+//    }
+//}
