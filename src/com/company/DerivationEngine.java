@@ -8,7 +8,6 @@ public class DerivationEngine {
     private LinkedList<String> input;
     private ArrayList<String> output = new ArrayList<>();
     int upper;
-    String focusedOperator;
 
     DerivationEngine(Function func) {
         input = func.rpn();
@@ -79,6 +78,7 @@ public class DerivationEngine {
                     copy();
                     upper = fxLocation;
                     derive();//get f'x
+                    break;
                 }
 
                 case "cos": {
@@ -89,8 +89,10 @@ public class DerivationEngine {
                     upper--;//go to fx
                     int fxLocation = upper;
                     copy();
+                    copy();
                     upper = fxLocation;
                     derive();//get f'x
+                    break;
                 }
 
                 case "tan": {
@@ -103,6 +105,7 @@ public class DerivationEngine {
                     copy();//add fx
                     upper = fxLocation;
                     derive();//add f'x
+                    break;
                 }
 
                 case "cot": {
@@ -117,6 +120,7 @@ public class DerivationEngine {
                     copy();//add fx
                     upper = fxLocation;
                     derive();//add f'x
+                    break;
                 }
 
                 case "sec": {
@@ -129,7 +133,7 @@ public class DerivationEngine {
                     copy();//add fx for tan
                     upper = fxPosition;
                     derive();//add f'x
-
+                    break;
                 }
 
                 case "csc": {
@@ -144,7 +148,7 @@ public class DerivationEngine {
                     copy();//add fx for tan
                     upper = fxPosition;
                     derive();//add f'x
-
+                    break;
                 }
             }
 
@@ -309,39 +313,13 @@ public class DerivationEngine {
             System.out.println("fail");
     }
 
-    public double evaluate(double value) {
-        Stack<Double> answer = new Stack<>();
-
-        for (int i = 0; i < output.size(); i++) {
-
-            if (Function.isOperator(output.get(i))) {
-                double y = answer.pop();
-                double x = answer.pop();
-                answer.push(Function.calculate(x, y, output.get(i)));
-            }
-
-            if (Function.isFunction(output.get(i))) {
-                if (output.get(i).equals("log")) {//Log has two arguments unlike other functions, so requires diff calculate()
-                    double y = answer.pop();
-                    double x = answer.pop();
-                    answer.push(Function.calculate(x, y, output.get(i)));
-                } else {
-                    double x = answer.pop();
-                    answer.push(Function.calculate(x, output.get(i)));
-                }
-            } else if (Function.isOperand(output.get(i)))
-                if (output.get(i).equals("x")) {
-                    answer.push(value);
-                } else {
-                    answer.push(Double.parseDouble(output.get(i)));
-                }
-        }
-        return answer.pop();
-    }
-
     @Override
     public String toString() {
         return Arrays.toString(output.toArray());
+    }
+
+    public ArrayList rpn() {
+        return output;
     }
 }
 

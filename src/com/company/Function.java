@@ -1,21 +1,27 @@
 package com.company;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.EmptyStackException;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public class Function {
 
     private Stack<String> operator = new Stack<>();
     private LinkedList<String> output = new LinkedList<>();
     private String equation;
-    private LinkedList<String> derivative = new LinkedList<>();
+    private DerivationEngine derive, secondDerive;
+    public Function derivative, secondDerivative;
 
     public Function(String equation) {
         this.equation = equation;
         infixToPostfix();
+        derive = new DerivationEngine(this);
+        derivative = new Function(derive.rpn());
+        secondDerive = new DerivationEngine(derivative);
+        secondDerivative = new Function(secondDerive.rpn());
+    }
+
+    public Function(ArrayList equation) {
+        output = new LinkedList<String>(equation);
     }
 
     public static void main(String[] args) {
@@ -331,27 +337,6 @@ public class Function {
         return Math.round(val * 1000000d) / 1000000d;
     }
 
-    private double unRoundedThirdDerivative(double value) {
-        double h = .001;
-        return (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2 * h);
-    }
-    
-    public double fourthDerivative(double value){
-        double h = .001;
-        double val = (unRoundedThirdDerivative(value + h) - unRoundedThirdDerivative(value - h)) / (2 * h);
-
-        if (Double.isNaN(val))
-            return val;
-
-        return Math.round(val * 100000000d) / 100000000d;
-    }
-    
-    private double unRoundedFourthDerivative(double value) {
-        double h = .001;
-        return (unRoundedThirdDerivative(value + h) - unRoundedThirdDerivative(value - h)) / (2 * h);
-    }
-
-
 //    Finds numerical integral within a bounded area.
 
     public double integral(double boundA, double boundB) {
@@ -382,7 +367,7 @@ public class Function {
 
         for (int i = 0; i < maxIterations; i++) {
             y = evaluate(xZero);
-            yPrime = derivative(xZero);
+            yPrime = derivative.evaluate(xZero);
             if (Math.abs(yPrime) < tolerance)
                 break;
 
@@ -398,27 +383,6 @@ public class Function {
             return xOne;
 
         return null;
-    }
-
-    public Double bisectionMethod(double a, double b) {
-        double tolerance = 0.0001;
-        if (evaluate(a) * evaluate(b) >= 0) {
-            return null;
-        }
-
-        double c = a;
-        while ((b - a) >= tolerance) {
-            c = (a + b) / 2;
-
-            if (evaluate(c) == 0.0)
-                break;
-
-            else if (evaluate(c) * evaluate(a) < 0) {
-                b = c;
-            } else
-                a = c;
-        }
-        return c;
     }
 
     public Double bisectionMethodDerivative(double a, double b) {
@@ -463,52 +427,11 @@ public class Function {
         return c;
     }
 
-    public Double bisectionMethodThirdDerivative(double a, double b) {
-        double tolerance = Math.pow(10, -7);
-        if (unRoundedThirdDerivative(a) * unRoundedThirdDerivative(b) >= 0) {
-            return null;
-        }
-
-        double c = a;
-        while ((b - a) >= tolerance) {
-            c = (a + b) / 2;
-
-            if (unRoundedThirdDerivative(c) == 0.0)
-                break;
-
-            else if (unRoundedThirdDerivative(c) * unRoundedThirdDerivative(a) < 0) {
-                b = c;
-            } else
-                a = c;
-        }
-        return c;
-    }
-
-    public Double bisectionMethodFourthDerivative(double a, double b) {
-        double tolerance = Math.pow(10, -7);
-        if (unRoundedFourthDerivative(a) * unRoundedFourthDerivative(b) >= 0) {
-            return null;
-        }
-
-        double c = a;
-        while ((b - a) >= tolerance) {
-            c = (a + b) / 2;
-
-            if (unRoundedFourthDerivative(c) == 0.0)
-                break;
-
-            else if (unRoundedFourthDerivative(c) * unRoundedFourthDerivative(a) < 0) {
-                b = c;
-            } else
-                a = c;
-        }
-        return c;
-    }
-
     public String toString() {
         return equation;
     }
 
+    //Uses the program in order to demonstrate the 2nd Fundamental Theorem of Calculus
     public void fundamentalTheoremOfCalc(double boundA, double boundB) {
         System.out.println((evaluate(boundB) - evaluate(boundA)) + " approximately equals " + (FTCintegral(boundA, boundB)));
     }
@@ -519,7 +442,7 @@ public class Function {
 
 
         for (double i = boundA; i < boundB; i+= width) {
-            sum += width * derivative((i + width / 2));
+            sum += width * derivative.evaluate((i + width / 2));
         }
 
         return sum;

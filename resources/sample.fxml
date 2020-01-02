@@ -35,10 +35,10 @@
          <children>
             <LineChart fx:id="graph" GridPane.columnIndex="1">
                <xAxis>
-                  <NumberAxis minorTickVisible="false" side="BOTTOM" />
+                  <NumberAxis autoRanging="false" lowerBound="-20.0" minorTickVisible="true" side="BOTTOM" upperBound="20.0" fx:id="xAxis"/>
                </xAxis>
                <yAxis>
-                  <NumberAxis minorTickVisible="false" side="LEFT" />
+                  <NumberAxis autoRanging="false" lowerBound="-20.0" minorTickVisible="true" side="TOP" upperBound="20.0" fx:id="yAxis"/>
                </yAxis>
             </LineChart>
             <GridPane id="sidebar" prefHeight="341.0" prefWidth="225.0">
@@ -164,6 +164,33 @@
                               <Font name="Lato Light" size="14.0" />
                            </font>
                         </TextField>
+                     </children>
+                  </GridPane>
+                  <GridPane hgap="20.0" prefHeight="40.0" prefWidth="139.0" GridPane.rowIndex="5">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomInAction" prefHeight="30.0" prefWidth="125.0" text="Zoom In" GridPane.halignment="RIGHT">
+                           <font>
+                              <Font name="Lato Light" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomOutAction" prefHeight="30.0" prefWidth="125.0" text="Zoom Out" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+                           <font>
+                              <Font name="Lato Light" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                        </Button>
                      </children>
                   </GridPane>
                   <!--                  <Button styleClass="button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="140.0" text="Zoom Out" GridPane.rowIndex="4">-->
