@@ -6,15 +6,16 @@
 }
 
 .default-color0.chart-series-line {
-    -fx-stroke: red;
+    -fx-stroke: black;
 }
 
 .default-color1.chart-line-symbol {
-    -fx-background-color: green, green;
+    -fx-background-color: #FF6469, #ff6469;
+
 }
 
 .default-color2.chart-line-symbol {
-    -fx-background-color: #257780, #257780;
+    -fx-background-color: #4c74ff, #4C74FF;
 }
 
 .default-color3.chart-line-symbol {
@@ -26,7 +27,7 @@
 }
 
 .default-color0.chart-legend-item-symbol{
-    -fx-background-color: red;
+    -fx-background-color: black;
 }
 
 
