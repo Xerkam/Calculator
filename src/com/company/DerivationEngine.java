@@ -88,8 +88,7 @@ public class DerivationEngine {
                     output.add("sin");
                     upper--;//go to fx
                     int fxLocation = upper;
-                    copy();
-                    copy();
+                    copy();//add fx
                     upper = fxLocation;
                     derive();//get f'x
                     break;

@@ -71,6 +71,18 @@ public class Controller implements Initializable {
     }
 
     @FXML
+    private void moveUpAction(final ActionEvent event) {
+        yAxis.setUpperBound(yAxis.getUpperBound() + 5);
+        yAxis.setLowerBound(yAxis.getLowerBound() + 5);
+    }
+
+    @FXML
+    private void moveDownAction(final ActionEvent event) {
+        yAxis.setUpperBound(yAxis.getUpperBound() - 5);
+        yAxis.setLowerBound(yAxis.getLowerBound() - 5);
+    }
+
+    @FXML
     @SuppressWarnings("Duplicates")//Suppress duplicate warning given by intializing the variables in F(x)/F'(x)/F''(x)
 //    Graphs parent function
 
@@ -400,7 +412,12 @@ public class Controller implements Initializable {
     @FXML
 //    Clears Graph
     private void handleClearButtonAction(final ActionEvent event) {
+        functionField.clear();
         graph.getData().clear();
+        xAxis.setUpperBound(20);
+        yAxis.setUpperBound(20);
+        xAxis.setLowerBound(-20);
+        yAxis.setLowerBound(-20);
     }
 
 }
