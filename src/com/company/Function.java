@@ -134,6 +134,8 @@ public class Function {
 //    }
 
 
+//    Implements the Shunting Yard algorithm to parse infix string into Reverse Polish Notation (postfix)
+
     private void infixToPostfix()  {
 
         for (int i = 0; i < equation.length(); i++) {
@@ -144,10 +146,12 @@ public class Function {
             if (isOperand(element)) {
                 e = i + 1;
 
-                //Checks to see if a found operands has more digits after it or a decimal point (indicating a larger/longer
-                //number
+                //Checks to see if the operand is a multidigit number (ex: 10, 100, 10.10) and makes sure the appended
+                //substring includes all of the digits
 
-                while (e < equation.length() && (isOperand(equation.substring(e, e + 1)) || equation.substring(e, e + 1).equals("."))) {
+                while (e < equation.length()
+                        && (isOperand(equation.substring(e, e + 1))
+                        || equation.substring(e, e + 1).equals("."))) {
                     e++;
                 }
 
@@ -170,7 +174,9 @@ public class Function {
             else if (i < equation.length() - 4 && isFunction(equation.substring(i, i + 2))) {
                 operator.push(equation.substring(i, i + 2));
                 i += 1;
-            } else if (isOperator(element)) { //If element is an operator
+            }
+
+            else if (isOperator(element)) { //If element is an operator
                 while (!operator.isEmpty()
                         && (isFunction(operator.peek()) //If the top of operator stack is a function
                         || (precedence(operator.peek()) > precedence(element)) //or precedence of top operator is more than current
@@ -183,9 +189,13 @@ public class Function {
 
                 operator.push(element);
 
-            } else if (element.equals("(")) {
+            }
+
+            else if (element.equals("(")) {
                 operator.push(element);
-            } else if (element.equals(")")) {
+            }
+
+            else if (element.equals(")")) {
                 try {
 
                     while (!operator.peek().equals("("))
