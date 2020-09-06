@@ -1,12 +1,11 @@
 package com.company;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class Function {
 
     private Stack<String> operator = new Stack<>();
-    private LinkedList<String> output = new LinkedList<>();
+    private ArrayList<String> output = new ArrayList<>();
     private String equation;
     private DerivationEngine derive, secondDerive;
     public Function derivative, secondDerivative;
@@ -21,7 +20,7 @@ public class Function {
     }
 
     public Function(ArrayList equation) {
-        output = new LinkedList<String>(equation);
+        output = equation;
     }
 
     public static void main(String[] args) {
@@ -155,7 +154,7 @@ public class Function {
                     e++;
                 }
 
-                output.addLast(equation.substring(i, e));
+                output.add(equation.substring(i, e));
                 i = e - 1;// Set I to be the amount of characters skipped
 
             }
@@ -183,7 +182,7 @@ public class Function {
                         || (precedence(operator.peek()) == precedence(element) && precedence(operator.peek()) != 3)) //Or precedence is equal and not ^
                         && !operator.peek().equals("(")) { // And operator is not "("
 
-                    output.addLast(operator.pop()); //Add operators to output
+                    output.add(operator.pop()); //Add operators to output
 
                 }
 
@@ -199,7 +198,7 @@ public class Function {
                 try {
 
                     while (!operator.peek().equals("("))
-                        output.addLast(operator.pop()); //Add operators to output
+                        output.add(operator.pop()); //Add operators to output
 
                     if (operator.peek().equals("("))
                         operator.pop();
@@ -211,7 +210,7 @@ public class Function {
         }
 
         while (!operator.isEmpty()) //If there are operators left over after tokens have been looked through
-            output.addLast(operator.pop()); //Add them all into output queue
+            output.add(operator.pop()); //Add them all into output queue
 
     }
 
@@ -458,7 +457,7 @@ public class Function {
         return sum;
     }
 
-    public LinkedList<String> rpn() {
+    public ArrayList<String> rpn() {
         return output;
     }
 

@@ -52,6 +52,8 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         graph.setAnimated(false);
+        lowerBoundField.setText("-10");
+        upperBoundField.setText("10");
     }
 
     @FXML

@@ -1,3 +1,16 @@
+/**
+ * This Derivation Engine is a component of the Function Class that implements
+ * recursive based symbolic differentiation for the functions.
+
+ **/
+
+// ToDo
+//   - While functional, the deriviatives of the Function Objects are not currently simplified, so while the derivative
+//   of a function can be printed out, it would be in fairly messy form(ex: 'x 1 +' would become '1 0 +' rather than
+//   '1')
+
+
+
 package com.company;
 
 import javafx.scene.Parent;
@@ -5,9 +18,9 @@ import javafx.scene.Parent;
 import java.util.*;
 
 public class DerivationEngine {
-    private LinkedList<String> input;
+    private ArrayList<String> input;
     private ArrayList<String> output = new ArrayList<>();
-    int upper;
+    private int upper;
 
     DerivationEngine(Function func) {
         input = func.rpn();
@@ -236,6 +249,7 @@ public class DerivationEngine {
 
     }
 
+//    Required for chain rule operations; Copies the function
     private void copy() {
         String value = input.get(upper);
 
