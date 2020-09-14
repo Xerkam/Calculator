@@ -8,10 +8,6 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 
-
-//*******************To Do*******************
-
-
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -20,9 +16,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        FXMLLoader loader = new FXMLLoader(new File("C:\\Users\\Daniel\\Documents\\GitHub\\Calculator\\resources\\sample.fxml").toURI().toURL());
-        Parent root = loader.load();
+        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
         primaryStage.setScene(scene);

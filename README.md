@@ -12,7 +12,6 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
 
 ##  About <a name = "about"></a>
 This calculator was a learning project for me to familiarize myself with creating more complex software. It uses an implementation of the [Shunting-Yard Algorithim](https://www.google.com/search?client=firefox-b-1-d&q=shunting+yard+algorithm)
