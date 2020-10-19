@@ -32,16 +32,18 @@ As it stands, the calculator currently has support for the following functions:
 ##  Getting Started <a name = "getting_started"></a>
 
 ### Prerequisites
-A JavaFX SDK is required to run this project. In order to add one to the Project, you can go download the package at [Gluon](https://gluonhq.com/products/javafx/). Once you download the package, Unzip the JDK. Then,
-open the project and navigate to File > Project Settings > Libraries and click the plus button. Navigate to the directory of your JavaFX lib file (example directory: "C:\Users\My\Directory\javafx-sdk-11.0.2\lib") and click "open". After that the JDK library should be integrated
-into the project. [Here](https://stackoverflow.com/questions/52682195/how-to-get-javafx-and-java-11-working-in-intellij-idea) is another helpful resource to getting the JDK setup.
+There are no requirements to run this project. The user just needs to clone the repo and run Main() to get access to the graphing UI. However, I have only tested opening the project through Intellij using their built in version control fetcher. It is possible that installing the software in other ways may require additional work to build the program such as redefining project structures.
 
 ### Installing
-There shouldn't be any additional setup past downloading the files and defining the file structure/compiling. To define the file structure in Intellij, go to 
-Open the Project, then go to File > Project Settings > Modules. Then, select the resource folder and give it a resource label, and provide the src folder with a source label.
-The program should then compile without errors.
+1. Copy the HTTPS web URL of this GitHub Project
+2. Open Intellij Idea and navigate to the welcome menu
+3. Click 'Get from Version Control' and complete the steps needed to log in to your GitHub Account
+4. Paste the copied web URL into the 'URL' section and select the directory where you want the projec to reside
+5. Wait until the project structure full intializes, then run Main()
+
 
 ## Built Using <a name = "built_using"></a>
 - [JavaFX](https://openjfx.io//) - UI + Charting Framework
+- [Maven](http://maven.apache.org/what-is-maven.html) - Dependency Manager
 - [Scene Builder](https://gluonhq.com/products/scene-builder/) - UI Design Tool
 
