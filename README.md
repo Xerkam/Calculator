@@ -39,7 +39,7 @@ There are no requirements to run this project. The user just needs to clone the 
 2. Open Intellij Idea and navigate to the welcome menu
 3. Click 'Get from Version Control' and complete the steps needed to log in to your GitHub Account
 4. Paste the copied web URL into the 'URL' section and select the directory where you want the projec to reside
-5. Wait until the project structure full intializes, then run Main()
+5. Wait until the project structure fully intializes, then run Main()
 
 
 ## Built Using <a name = "built_using"></a>
