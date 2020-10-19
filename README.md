@@ -26,6 +26,7 @@ As it stands, the calculator currently has support for the following functions:
 - Exponential Functions
 - Polynomial Functions (with removable discontinuity support)
 - Logarithmic Functions (base x and base e)
+- Rational Functions (As of this update asymptotes are not currently recorded onto the graph)
 
 
 ##  Getting Started <a name = "getting_started"></a>
