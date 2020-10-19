@@ -1,11 +1,7 @@
-package com.company;
-
-
+import expressionEvaluation.Function;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
-import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -13,8 +9,6 @@ import javafx.scene.control.TextField;
 
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 
