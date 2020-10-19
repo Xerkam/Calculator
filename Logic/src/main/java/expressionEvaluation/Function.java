@@ -1,544 +1,478 @@
 package expressionEvaluation;//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+/**
+ * Class responsible for taking in a string input of an expression in normal notation and converting it to an evalutable
+ * expression in Reverse Polish Notation.
+ *
+ * https://en.wikipedia.org/wiki/Reverse_Polish_notation - Explanation of RPN
+ * https://en.wikipedia.org/wiki/Shunting-yard_algorithm - Conversion Algorithm used to go from infix to RPN
+ */
+
 public class Function {
-    private Stack<String> operator = new Stack();
-    private ArrayList<String> output = new ArrayList();
+
+    private Stack<String> operator = new Stack<>();
+    private ArrayList<String> output = new ArrayList<>();
     private String equation;
-    private DerivationEngine derive;
-    private DerivationEngine secondDerive;
-    public Function derivative;
-    public Function secondDerivative;
+    private DerivationEngine derive, secondDerive;
+    public Function derivative, secondDerivative;
 
     public Function(String equation) {
         this.equation = equation;
-        this.infixToPostfix();
-        this.derive = new DerivationEngine(this);
-        this.derivative = new Function(this.derive.rpn());
-        this.secondDerive = new DerivationEngine(this.derivative);
-        this.secondDerivative = new Function(this.secondDerive.rpn());
+        infixToPostfix();
+        derive = new DerivationEngine(this);
+        derivative = new Function(derive.rpn());
+        secondDerive = new DerivationEngine(derivative);
+        secondDerivative = new Function(secondDerive.rpn());
     }
 
     public Function(ArrayList equation) {
-        this.output = equation;
+        output = equation;
     }
 
     public static void main(String[] args) {
+
     }
+
+//    Returns the precedence of a certain operation
 
     public static boolean isOperand(String token) {
-        if (token.equals("x")) {
+        if (token.equals("x"))
             return true;
-        } else {
-            try {
-                double var1 = Double.parseDouble(token);
-                return true;
-            } catch (NullPointerException | NumberFormatException var3) {
-                return false;
-            }
+        try {
+            double x = Double.parseDouble(token);
+        } catch (NumberFormatException | NullPointerException nfe) {
+            return false;
         }
+        return true;
     }
+
+//    Check to see if a token is an operand
 
     private int precedence(String x) {
-        byte var3 = -1;
-        switch(x.hashCode()) {
-            case 42:
-                if (x.equals("*")) {
-                    var3 = 1;
-                }
-                break;
-            case 43:
-                if (x.equals("+")) {
-                    var3 = 3;
-                }
-                break;
-            case 45:
-                if (x.equals("-")) {
-                    var3 = 4;
-                }
-                break;
-            case 47:
-                if (x.equals("/")) {
-                    var3 = 2;
-                }
-                break;
-            case 94:
-                if (x.equals("^")) {
-                    var3 = 0;
-                }
-        }
-
-        switch(var3) {
-            case 0:
+        switch (x) {
+            case "^":
                 return 3;
-            case 1:
-            case 2:
+
+            case "*":
+            case "/":
                 return 2;
-            case 3:
-            case 4:
+
+            case "+":
+            case "-":
                 return 1;
-            default:
-                return -1;
         }
+        return -1;
     }
+
+//    Check to see if a token is an operator
 
     public static boolean isOperator(String token) {
-        byte var2 = -1;
-        switch(token.hashCode()) {
-            case 42:
-                if (token.equals("*")) {
-                    var2 = 1;
-                }
-                break;
-            case 43:
-                if (token.equals("+")) {
-                    var2 = 3;
-                }
-                break;
-            case 45:
-                if (token.equals("-")) {
-                    var2 = 4;
-                }
-                break;
-            case 47:
-                if (token.equals("/")) {
-                    var2 = 2;
-                }
-                break;
-            case 94:
-                if (token.equals("^")) {
-                    var2 = 0;
-                }
-        }
-
-        switch(var2) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
+        switch (token) {
+            case "^":
+            case "*":
+            case "/":
+            case "+":
+            case "-":
                 return true;
-            default:
-                return false;
         }
+        return false;
     }
+
+//    Check to see if token is a trig function
 
     public static boolean isTrig(String token) {
-        byte var2 = -1;
-        switch(token.hashCode()) {
-            case 98695:
-                if (token.equals("cos")) {
-                    var2 = 3;
-                }
-                break;
-            case 98696:
-                if (token.equals("cot")) {
-                    var2 = 5;
-                }
-                break;
-            case 98803:
-                if (token.equals("csc")) {
-                    var2 = 4;
-                }
-                break;
-            case 113745:
-                if (token.equals("sec")) {
-                    var2 = 1;
-                }
-                break;
-            case 113880:
-                if (token.equals("sin")) {
-                    var2 = 0;
-                }
-                break;
-            case 114593:
-                if (token.equals("tan")) {
-                    var2 = 2;
-                }
-        }
-
-        switch(var2) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
+        switch (token) {
+            case "sin":
+            case "sec":
+            case "tan":
+            case "cos":
+            case "csc":
+            case "cot":
                 return true;
-            default:
-                return false;
         }
+        return false;
     }
+
+//    Check to see if a token is a function
 
     public static boolean isFunction(String token) {
-        byte var2 = -1;
-        switch(token.hashCode()) {
-            case 3458:
-                if (token.equals("ln")) {
-                    var2 = 1;
-                }
-                break;
-            case 107332:
-                if (token.equals("log")) {
-                    var2 = 0;
-                }
-        }
-
-        switch(var2) {
-            case 0:
-            case 1:
+        switch (token) {
+            case "log":
+            case "ln":
                 return true;
-            default:
-                return isTrig(token);
         }
+        return isTrig(token);
     }
 
+
+
+//    Symbolic Diff Section
+
+
+
     private static boolean isUnaryOperator(String token) {
-        return token.equals("log") ? false : isFunction(token);
+        if(token.equals("log"))
+            return false;
+        return isFunction(token);
+
     }
 
     private static boolean isBinaryOperator(String token) {
-        return token.equals("log") ? true : isOperator(token);
+        if(token.equals("log"))
+            return true;
+        return isOperator(token);
     }
 
-    private void infixToPostfix() {
-        for(int i = 0; i < this.equation.length(); ++i) {
-            String element = this.equation.substring(i, i + 1);
+//    private int leftBoundGrasp(int arity, Integer index) {
+//        do {
+//            index = index - 1;
+//            if (isUnaryOperator(output.get(index)))
+//                leftBoundGrasp(1, index);
+//            else {
+//                if (isBinaryOperator(output.get(index)))
+//                    leftBoundGrasp(2, index);
+//                else
+//                    if ()
+//            }
+//
+//        }
+//    }
+
+
+//    Implements the Shunting Yard algorithm to parse infix string into Reverse Polish Notation (postfix)
+
+    private void infixToPostfix()  {
+
+        for (int i = 0; i < equation.length(); i++) {
+
+            int e;
+            String element = equation.substring(i, i + 1);
+
             if (isOperand(element)) {
-                int e;
-                for(e = i + 1; e < this.equation.length() && (isOperand(this.equation.substring(e, e + 1)) || this.equation.substring(e, e + 1).equals(".")); ++e) {
+                e = i + 1;
+
+                //Checks to see if the operand is a multidigit number (ex: 10, 100, 10.10) and makes sure the appended
+                //substring includes all of the digits
+
+                while (e < equation.length()
+                        && (isOperand(equation.substring(e, e + 1))
+                        || equation.substring(e, e + 1).equals("."))) {
+                    e++;
                 }
 
-                this.output.add(this.equation.substring(i, e));
-                i = e - 1;
-            } else if (i < this.equation.length() - 5 && isFunction(this.equation.substring(i, i + 3))) {
-                this.operator.push(this.equation.substring(i, i + 3));
-                i += 2;
-            } else if (i < this.equation.length() - 4 && isFunction(this.equation.substring(i, i + 2))) {
-                this.operator.push(this.equation.substring(i, i + 2));
-                ++i;
-            } else if (isOperator(element)) {
-                while(!this.operator.isEmpty() && (isFunction((String)this.operator.peek()) || this.precedence((String)this.operator.peek()) > this.precedence(element) || this.precedence((String)this.operator.peek()) == this.precedence(element) && this.precedence((String)this.operator.peek()) != 3) && !((String)this.operator.peek()).equals("(")) {
-                    this.output.add((String)this.operator.pop());
+                output.add(equation.substring(i, e));
+                i = e - 1;// Set I to be the amount of characters skipped
+
+            }
+
+            //Checks if equation has a trig function within it, index variable (i) cant be more than equation.length() - 5
+            // because there are, at the least, 6 characters that a trig function needs to have. ex: sin(x)
+
+            else if ((i < equation.length() - 5 && isFunction(equation.substring(i, i + 3)))) {
+
+                operator.push(equation.substring(i, i + 3));
+                i += 2; // Skip next two characters of trig function
+            }
+
+            //Seperate case for ln as it is a two digit function
+
+            else if (i < equation.length() - 4 && isFunction(equation.substring(i, i + 2))) {
+                operator.push(equation.substring(i, i + 2));
+                i += 1;
+            }
+
+            else if (isOperator(element)) { //If element is an operator
+                while (!operator.isEmpty()
+                        && (isFunction(operator.peek()) //If the top of operator stack is a function
+                        || (precedence(operator.peek()) > precedence(element)) //or precedence of top operator is more than current
+                        || (precedence(operator.peek()) == precedence(element) && precedence(operator.peek()) != 3)) //Or precedence is equal and not ^
+                        && !operator.peek().equals("(")) { // And operator is not "("
+
+                    output.add(operator.pop()); //Add operators to output
+
                 }
 
-                this.operator.push(element);
-            } else if (element.equals("(")) {
-                this.operator.push(element);
-            } else if (element.equals(")")) {
+                operator.push(element);
+
+            }
+
+            else if (element.equals("(")) {
+                operator.push(element);
+            }
+
+            else if (element.equals(")")) {
                 try {
-                    while(!((String)this.operator.peek()).equals("(")) {
-                        this.output.add((String)this.operator.pop());
-                    }
 
-                    if (((String)this.operator.peek()).equals("(")) {
-                        this.operator.pop();
-                    }
-                } catch (EmptyStackException var5) {
+                    while (!operator.peek().equals("("))
+                        output.add(operator.pop()); //Add operators to output
+
+                    if (operator.peek().equals("("))
+                        operator.pop();
+
+                } catch (EmptyStackException e1) {
                     System.out.println("Error: Mismatched Parentheses");
                 }
             }
         }
 
-        while(!this.operator.isEmpty()) {
-            this.output.add((String)this.operator.pop());
-        }
+        while (!operator.isEmpty()) //If there are operators left over after tokens have been looked through
+            output.add(operator.pop()); //Add them all into output queue
 
     }
+
+//    solves equation for a given x value
 
     public double evaluate(double value) {
-        Stack<Double> answer = new Stack();
+        Stack<Double> answer = new Stack<>();
 
-        for(int i = 0; i < this.output.size(); ++i) {
-            double y;
-            double x;
-            if (isOperator((String)this.output.get(i))) {
-                y = (Double)answer.pop();
-                x = (Double)answer.pop();
-                answer.push(calculate(x, y, (String)this.output.get(i)));
+        for (int i = 0; i < output.size(); i++) {
+
+            if (isOperator(output.get(i))) {
+                double y = answer.pop();
+                double x = answer.pop();
+                answer.push(Function.calculate(x, y, output.get(i)));
             }
 
-            if (isFunction((String)this.output.get(i))) {
-                if (((String)this.output.get(i)).equals("log")) {
-                    y = (Double)answer.pop();
-                    x = (Double)answer.pop();
-                    answer.push(calculate(x, y, (String)this.output.get(i)));
+            if (isFunction(output.get(i))) {
+                if (output.get(i).equals("log")) {//Log has two arguments unlike other functions, so requires diff calculate()
+                    double y = answer.pop();
+                    double x = answer.pop();
+                    answer.push(Function.calculate(x, y, output.get(i)));
                 } else {
-                    y = (Double)answer.pop();
-                    answer.push(calculate(y, (String)this.output.get(i)));
+                    double x = answer.pop();
+                    answer.push(Function.calculate(x, output.get(i)));
                 }
-            } else if (isOperand((String)this.output.get(i))) {
-                if (((String)this.output.get(i)).equals("x")) {
+            } else if (isOperand(output.get(i)))
+                if (output.get(i).equals("x")) {
                     answer.push(value);
                 } else {
-                    answer.push(Double.parseDouble((String)this.output.get(i)));
+                    answer.push(Double.parseDouble(output.get(i)));
                 }
-            }
         }
-
-        return (Double)answer.pop();
+        return answer.pop();
     }
+
+//    Used when the token given is an operator
 
     public static double calculate(Double x, Double y, String token) {
-        byte var4 = -1;
-        switch(token.hashCode()) {
-            case 42:
-                if (token.equals("*")) {
-                    var4 = 3;
-                }
-                break;
-            case 43:
-                if (token.equals("+")) {
-                    var4 = 0;
-                }
-                break;
-            case 45:
-                if (token.equals("-")) {
-                    var4 = 1;
-                }
-                break;
-            case 47:
-                if (token.equals("/")) {
-                    var4 = 2;
-                }
-                break;
-            case 94:
-                if (token.equals("^")) {
-                    var4 = 4;
-                }
-                break;
-            case 107332:
-                if (token.equals("log")) {
-                    var4 = 5;
-                }
+
+        switch (token) {
+            case "+":
+                return x + y;
+
+            case "-":
+                return x - y;
+
+            case "/":
+                return x / y;
+
+            case "*":
+                return x * y;
+
+            case "^":
+                return Math.pow(x, y);
+
+            case "log":
+                return (Math.log10(y)) / (Math.log10(x));
         }
 
-        switch(var4) {
-            case 0:
-                return x + y;
-            case 1:
-                return x - y;
-            case 2:
-                return x / y;
-            case 3:
-                return x * y;
-            case 4:
-                return Math.pow(x, y);
-            case 5:
-                return Math.log10(y) / Math.log10(x);
-            default:
-                return 0.0D;
-        }
+        return 0;
     }
+
+//    Used when the token given is a function
 
     public static double calculate(Double x, String token) {
-        byte var3 = -1;
-        switch(token.hashCode()) {
-            case 3458:
-                if (token.equals("ln")) {
-                    var3 = 6;
-                }
-                break;
-            case 98695:
-                if (token.equals("cos")) {
-                    var3 = 3;
-                }
-                break;
-            case 98696:
-                if (token.equals("cot")) {
-                    var3 = 5;
-                }
-                break;
-            case 98803:
-                if (token.equals("csc")) {
-                    var3 = 4;
-                }
-                break;
-            case 113745:
-                if (token.equals("sec")) {
-                    var3 = 1;
-                }
-                break;
-            case 113880:
-                if (token.equals("sin")) {
-                    var3 = 0;
-                }
-                break;
-            case 114593:
-                if (token.equals("tan")) {
-                    var3 = 2;
-                }
-        }
 
-        switch(var3) {
-            case 0:
+        switch (token) {
+            case "sin":
                 return Math.sin(x);
-            case 1:
-                return 1.0D / Math.cos(x);
-            case 2:
+
+            case "sec":
+                return 1 / (Math.cos(x));
+
+            case "tan":
                 return Math.tan(x);
-            case 3:
+
+            case "cos":
                 return Math.cos(x);
-            case 4:
-                return 1.0D / Math.sin(x);
-            case 5:
-                return 1.0D / Math.tan(x);
-            case 6:
+
+            case "csc":
+                return 1 / (Math.sin(x));
+
+            case "cot":
+                return 1 / (Math.tan(x));
+
+            case "ln":
                 return Math.log(x);
-            default:
-                return 0.0D;
         }
+        return 0;
     }
 
+
+//    Finds numerical derivative of a function at a point (rounded to 7 decimal places)
+
     public double derivative(double value) {
-        double h = 0.001D;
-        double val = (this.evaluate(value + h) - this.evaluate(value - h)) / (2.0D * h);
-        return Double.isNaN(val) ? val : (double)Math.round(val * 1.0E8D) / 1.0E8D;
+        double h = .001;
+        double val = (evaluate(value + h) - evaluate(value - h)) / (2 * h);
+
+        if (Double.isNaN(val))
+            return val;
+//        Rounding to the 7th decimal place seems to be interfering with very discrete extremas/POI such as x^10 or x^11
+        return Math.round(val * 100000000d) / 100000000d; //rounds to seven decimal places
     }
 
     private double unRoundedDerivative(double value) {
-        double h = 0.001D;
-        return (this.evaluate(value + h) - this.evaluate(value - h)) / (2.0D * h);
+        double h = .001;
+        return (evaluate(value + h) - evaluate(value - h)) / (2 * h);
     }
 
     public double secondDerivative(double value) {
-        double h = 0.001D;
-        double val = (this.unRoundedDerivative(value + h) - this.unRoundedDerivative(value - h)) / (2.0D * h);
-        return Double.isNaN(val) ? val : (double)Math.round(val * 1000000.0D) / 1000000.0D;
+        double h = .001;
+        double val = (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2 * h);
+
+        if (Double.isNaN(val))
+            return val;
+//        Rounding to the 7th decimal place seems to be interfering with very discrete extremas/POI such as x^10 or x^11
+        return Math.round(val * 1000000d) / 1000000d;
+//        return val;
     }
 
     private double unRoundedSecondDerivative(double value) {
-        double h = 0.001D;
-        return (this.unRoundedDerivative(value + h) - this.unRoundedDerivative(value - h)) / (2.0D * h);
+        double h = .001;
+        return (unRoundedDerivative(value + h) - unRoundedDerivative(value - h)) / (2 * h);
     }
 
     public double thirdDerivative(double value) {
-        double h = 0.001D;
-        double val = (this.unRoundedSecondDerivative(value + h) - this.unRoundedSecondDerivative(value - h)) / (2.0D * h);
-        return Double.isNaN(val) ? val : (double)Math.round(val * 1000000.0D) / 1000000.0D;
+        double h = .001;
+        double val = (unRoundedSecondDerivative(value + h) - unRoundedSecondDerivative(value - h)) / (2 * h);
+
+        if (Double.isNaN(val))
+            return val;
+
+        return Math.round(val * 1000000d) / 1000000d;
     }
 
-    public double integral(double boundA, double boundB) {
-        double width = (boundB - boundA) / 20000.0D;
-        double sum = 0.0D;
+//    Finds numerical integral within a bounded area.
 
-        for(double i = boundA; i < boundB; i += width) {
-            sum += width * this.evaluate(i + width / 2.0D);
+    public double integral(double boundA, double boundB) {
+        double width = (boundB - boundA) / (20000); //Find width of each rectangle in sum
+        double sum = 0;
+
+
+        for (double i = boundA; i < boundB; i+= width) {
+            sum += width * evaluate((i + width / 2));
         }
 
         return sum;
     }
 
     public boolean isRemovableDiscontinuity(double value) {
-        return Double.isNaN(this.evaluate(value));
+        return Double.isNaN(evaluate(value));
     }
+
+//    Identifies x value of root for function
 
     public Double newtonsMethod(double xZero) {
         int maxIterations = 20;
-        double tolerance = 0.01D;
-        double xOne = 0.0D;
+        double tolerance = 0.01;
+        double xOne = 0;
         boolean foundSolution = false;
+        double y;
+        double yPrime;
 
-        for(int i = 0; i < maxIterations; ++i) {
-            double y = this.evaluate(xZero);
-            double yPrime = this.derivative.evaluate(xZero);
-            if (Math.abs(yPrime) < tolerance) {
+        for (int i = 0; i < maxIterations; i++) {
+            y = evaluate(xZero);
+            yPrime = derivative.evaluate(xZero);
+            if (Math.abs(yPrime) < tolerance)
                 break;
-            }
 
             xOne = xZero - y / yPrime;
-            if (Math.abs(xOne - xZero) < Math.pow(10.0D, -7.0D)) {
+
+            if (Math.abs(xOne - xZero) < Math.pow(10, -7))
                 foundSolution = true;
-            }
 
             xZero = xOne;
         }
 
-        return foundSolution ? xOne : null;
+        if (foundSolution)
+            return xOne;
+
+        return null;
     }
 
     public Double bisectionMethodDerivative(double a, double b) {
-        double tolerance = Math.pow(10.0D, -7.0D);
-        if (this.unRoundedDerivative(a) * this.unRoundedDerivative(b) >= 0.0D) {
+        double tolerance = Math.pow(10, -7);
+        if (unRoundedDerivative(a) * unRoundedDerivative(b) >= 0) {
             return null;
-        } else {
-            double c = a;
-
-            while(b - a >= tolerance) {
-                c = (a + b) / 2.0D;
-                if (this.unRoundedDerivative(c) == 0.0D) {
-                    break;
-                }
-
-                if (this.unRoundedDerivative(c) * this.unRoundedDerivative(a) < 0.0D) {
-                    b = c;
-                } else {
-                    a = c;
-                }
-            }
-
-            return c;
         }
+
+        double c = a;
+        while ((b - a) >= tolerance) {
+            c = (a + b) / 2;
+
+            if (unRoundedDerivative(c) == 0.0)
+                break;
+
+            else if (unRoundedDerivative(c) * unRoundedDerivative(a) < 0) {
+                b = c;
+            } else
+                a = c;
+        }
+        return c;
     }
 
     public Double bisectionMethodSecondDerivative(double a, double b) {
-        double tolerance = Math.pow(10.0D, -7.0D);
-        if (this.unRoundedSecondDerivative(a) * this.unRoundedSecondDerivative(b) >= 0.0D) {
+        double tolerance = Math.pow(10, -7);
+        if (unRoundedSecondDerivative(a) * unRoundedSecondDerivative(b) >= 0) {
             return null;
-        } else {
-            double c = a;
-
-            while(b - a >= tolerance) {
-                c = (a + b) / 2.0D;
-                if (this.unRoundedSecondDerivative(c) == 0.0D) {
-                    break;
-                }
-
-                if (this.unRoundedSecondDerivative(c) * this.unRoundedSecondDerivative(a) < 0.0D) {
-                    b = c;
-                } else {
-                    a = c;
-                }
-            }
-
-            return c;
         }
+
+        double c = a;
+        while ((b - a) >= tolerance) {
+            c = (a + b) / 2;
+
+            if (unRoundedSecondDerivative(c) == 0.0)
+                break;
+
+            else if (unRoundedSecondDerivative(c) * unRoundedSecondDerivative(a) < 0) {
+                b = c;
+            } else
+                a = c;
+        }
+        return c;
     }
 
     public String toString() {
-        return this.equation;
+        return equation;
     }
 
+    //Uses the program in order to demonstrate the 2nd Fundamental Theorem of Calculus
     public void fundamentalTheoremOfCalc(double boundA, double boundB) {
-        PrintStream var10000 = System.out;
-        double var10001 = this.evaluate(boundB) - this.evaluate(boundA);
-        var10000.println(var10001 + " approximately equals " + this.FTCintegral(boundA, boundB));
+        System.out.println((evaluate(boundB) - evaluate(boundA)) + " approximately equals " + (FTCintegral(boundA, boundB)));
     }
 
     public double FTCintegral(double boundA, double boundB) {
-        double width = (boundB - boundA) / 20000.0D;
-        double sum = 0.0D;
+        double width = (boundB - boundA) / (20000); //Find width of each rectangle in sum
+        double sum = 0;
 
-        for(double i = boundA; i < boundB; i += width) {
-            sum += width * this.derivative.evaluate(i + width / 2.0D);
+
+        for (double i = boundA; i < boundB; i+= width) {
+            sum += width * derivative.evaluate((i + width / 2));
         }
 
         return sum;
     }
 
     public ArrayList<String> rpn() {
-        return this.output;
+        return output;
     }
 
     public String rpnToString() {
-        return Arrays.toString(this.output.toArray());
+        return Arrays.toString(output.toArray());
     }
 }

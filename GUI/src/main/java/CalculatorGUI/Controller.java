@@ -8,11 +8,19 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TextField;
-
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller of the Calculator UI, responsible for graphing the function and completing the associated logic with
+ * extrema/POI.
+ * Calculator has capability to graph
+ *
+ * - Polynomial Expressions (Removable Discontinuities supported)
+ * - Trigonometric Expressions (Asymptotes are not currently supported)
+ * - Exponential Expressions
+ * - Natural Logarithmic Expressions (Base A is currently not graphable due to issues with the Differentiation)
+ */
 
 public class Controller implements Initializable {
 
@@ -270,7 +278,6 @@ public class Controller implements Initializable {
             graph.getData().add(inflection);
 
             //If function has denominator, check to see if removable discontinuities exist.
-
             if (funcField.contains("/")) {
                 String denominator = funcField.substring(funcField.indexOf("/") + 1);
                 discontinuities = new XYChart.Series<>();
@@ -326,7 +333,6 @@ public class Controller implements Initializable {
             boundB = 10;
 
         if (!funcField.isBlank()) {
-
             series = new XYChart.Series<>();
             extrema = new XYChart.Series<>();
             inflection = new XYChart.Series<>();
@@ -334,18 +340,17 @@ public class Controller implements Initializable {
 
             //Adds points on graph
             for (double i = boundA + increment; i < boundB; i += increment) {
-
                 previousX = i - increment;
                 currentX = i;
                 nextX = i + increment;
-
-
+                if (!Double.isNaN(func.evaluate(i))) {
+                    series.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
+                }
 
 //                Computes extrema/POI of second derivative, too much floating point inaccuracy to function across all
 //                equations.
 
-//////                checks to see if each plotted point is an extrema.
-////
+////                checks to see if each plotted point is an extrema.
 //                if (func.secondDerivative(currentX) > func.secondDerivative(previousX) && func.secondDerivative(currentX) > func.secondDerivative(nextX)
 //                        || func.secondDerivative(currentX) < func.secondDerivative(previousX) && func.secondDerivative(currentX) < func.secondDerivative(nextX)) {
 //                    Double bisectionZero = func.bisectionMethodThirdDerivative(previousX, nextX);
@@ -368,10 +373,6 @@ public class Controller implements Initializable {
 //                }
 
 ////                charts points of graph (NaN required to graph functions with naturally bounded areas ex: log10x, ln(x)
-
-                if (!Double.isNaN(func.evaluate(i)))
-                    series.getData().add(new XYChart.Data<>(i, func.secondDerivative(i)));
-
             }
 
             series.setName(func.toString());
@@ -381,6 +382,7 @@ public class Controller implements Initializable {
             graph.getData().add(extrema);
             graph.getData().add(inflection);
 
+            // If the function has a component of division, check for removable discontinuities
             if (funcField.contains("/")) {
                 String denominator = funcField.substring(funcField.indexOf("/") + 1);
                 discontinuities = new XYChart.Series<>();
@@ -395,8 +397,9 @@ public class Controller implements Initializable {
                     if ((temp.evaluate(previousX) > 0 && temp.evaluate(nextX) < 0)
                             || (temp.evaluate(previousX) < 0 && temp.evaluate(nextX) > 0)) {
                         double zero = temp.newtonsMethod(currentX);
-                        if (func.isRemovableDiscontinuity(zero))
+                        if (func.isRemovableDiscontinuity(zero)) {
                             discontinuities.getData().add(new XYChart.Data<>(zero, func.secondDerivative(zero + Math.pow(10, -7))));
+                        }
                     }
                 }
                 discontinuities.setName("discontinuities");
