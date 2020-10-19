@@ -1,5 +1,4 @@
 
-out
-javafx-sdk-12.0.2
+target
 .idea
-.DS_Store
+/target/

@@ -1,7 +1,11 @@
+package CalculatorGUI;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class Main extends Application {
@@ -11,10 +15,10 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+    public void start(Stage primaryStage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/chart.css").toExternalForm());
         primaryStage.setScene(scene);
 
         primaryStage.show();
@@ -24,7 +28,7 @@ public class Main extends Application {
 
 }
 
-//public class Main {
+//public class CalculatorGUI.Main {
 //    public static void main(String[] args) {
 //        expressionEvaluation.Function f = new expressionEvaluation.Function("(x^3-8)/(x-2)");
 //

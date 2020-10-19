@@ -1,3 +1,5 @@
+package CalculatorGUI;
+
 import expressionEvaluation.Function;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,25 +17,25 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private TextField functionField;
+    public TextField functionField;
 
     @FXML
-    private LineChart graph;
+    public LineChart graph;
 
     @FXML
-    private TextField lowerBoundField;
+    public TextField lowerBoundField;
 
     @FXML
-    private TextField upperBoundField;
+    public TextField upperBoundField;
 
     @FXML
-    private TextField incrementField;
+    public TextField incrementField;
 
     @FXML
-    private NumberAxis xAxis;
+    public NumberAxis xAxis;
 
     @FXML
-    private NumberAxis yAxis;
+    public NumberAxis yAxis;
 
     private double boundA, boundB;
 
@@ -51,7 +53,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void zoomInAction(final ActionEvent event) {
+    public void zoomInAction(final ActionEvent event) {
         xAxis.setUpperBound(xAxis.getUpperBound() - 5);
         yAxis.setUpperBound(yAxis.getUpperBound() - 5);
         xAxis.setLowerBound(xAxis.getLowerBound() + 5);
@@ -59,7 +61,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void zoomOutAction(final ActionEvent event) {
+    public void zoomOutAction(final ActionEvent event) {
         xAxis.setUpperBound(xAxis.getUpperBound() + 5);
         yAxis.setUpperBound(yAxis.getUpperBound() + 5);
         xAxis.setLowerBound(xAxis.getLowerBound() - 5);
@@ -67,13 +69,13 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void moveUpAction(final ActionEvent event) {
+    public void moveUpAction(final ActionEvent event) {
         yAxis.setUpperBound(yAxis.getUpperBound() + 5);
         yAxis.setLowerBound(yAxis.getLowerBound() + 5);
     }
 
     @FXML
-    private void moveDownAction(final ActionEvent event) {
+    public void moveDownAction(final ActionEvent event) {
         yAxis.setUpperBound(yAxis.getUpperBound() - 5);
         yAxis.setLowerBound(yAxis.getLowerBound() - 5);
     }
@@ -82,7 +84,7 @@ public class Controller implements Initializable {
     @SuppressWarnings("Duplicates")//Suppress duplicate warning given by intializing the variables in F(x)/F'(x)/F''(x)
 //    Graphs parent function
 
-    private void handleGraphButtonAction(final ActionEvent event) {
+    public void handleGraphButtonAction(final ActionEvent event) {
 
         graph.getData().clear();
         String funcField = functionField.getText();
@@ -196,7 +198,7 @@ public class Controller implements Initializable {
     @SuppressWarnings("Duplicates")//Suppress duplicate warning given by intializing the variables in F(x)/F'(x)/F''(x)
 //    Graphs First Derivative
 
-    private void handleDerivative1ButtonAction(final ActionEvent event) {
+    public void handleDerivative1ButtonAction(final ActionEvent event) {
 
         graph.getData().clear();
         String funcField = functionField.getText();
@@ -299,7 +301,7 @@ public class Controller implements Initializable {
     @SuppressWarnings("Duplicates")//Suppress duplicate warning given by intializing the variables in F(x)/F'(x)/F''(x)
 //    Graphs Second Derivative
 
-    private void handleDerivative2ButtonAction(final ActionEvent event) {
+    public void handleDerivative2ButtonAction(final ActionEvent event) {
 
         graph.getData().clear();
         String funcField = functionField.getText();
@@ -407,7 +409,7 @@ public class Controller implements Initializable {
 
     @FXML
 //    Clears Graph
-    private void handleClearButtonAction(final ActionEvent event) {
+    public void handleClearButtonAction(final ActionEvent event) {
         functionField.clear();
         graph.getData().clear();
         xAxis.setUpperBound(20);
