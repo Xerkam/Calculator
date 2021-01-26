@@ -15,7 +15,7 @@
 
 ##  About <a name = "about"></a>
 This calculator was a learning project for me to familiarize myself with creating more complex software. It uses an implementation of the [Shunting-Yard Algorithim](https://www.google.com/search?client=firefox-b-1-d&q=shunting+yard+algorithm)
-to parse inputted equations into RPN, where it is then used in tandem with a stack-based expression evaluator to evaluate functions in R^2. Using the JavaFX
+to parse inputted equations into RPN, where it is then used in tandem with a stack-based expression evaluator to evaluate functions in R<sup>2</sup> coordinate space. Using the JavaFX
 library, I created a Graphing UI that accepts real-time expression inputs and charts them onto the graph. The UI uses a numeric derivation estimation (a combination of Newton's
 method and the Bisection Method) to
 identify extremas and points of concavity on the graph. The calculator also has the capability to symbolically differentiate functions. Using a recursive-based algorithm,
